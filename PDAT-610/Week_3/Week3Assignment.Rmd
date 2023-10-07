@@ -1,0 +1,80 @@
+---
+title: "Week 3 Assignment"
+author: Steven Spiegel
+output: pdf_document
+date: "2023-09-05"
+---
+
+
+### Assignment 3 responses 
+
+Below are my responses for Assignment 3.  
+
+**Create a new column in the AmesData data frame which has a value of 1 if the house is built in year 2000 or later or 0 if it is built before year 2000 using the following method.**
+
+Question 1: **ifelse(name this column – w3ifelse).  What is the first 10 elements of w3ifelse?**
+
+Response: **See code below**
+
+```{r Q1}
+library(AmesHousing)
+library(dplyr)
+# Load data
+AmesData <- make_ames()
+
+AmesData$w3ifelse <- if_else(AmesData$Year_Built >= 2000, 1, 0)
+head(AmesData$w3ifelse, 10)
+```
+
+Question 2: **if-Else and a For loop (name this column – w3for)  What is the first 10 elements of w3for?**
+
+Response: **See code below**
+
+```{r Q2}
+AmesData$w3for = numeric(nrow(AmesData)) # instantiate column with zeros
+for (i in 1:nrow(AmesData)) {
+  
+  if (is.na(AmesData$Year_Built[i])){
+    AmesData$w3for[i] <- NA
+  } else if(AmesData$Year_Built[i] >= 2000){
+    AmesData$w3for[i] <- 1
+  } else {
+    AmesData$w3for[i] <- 0 
+  }
+}
+
+head(AmesData$w3for, 10)
+```
+
+
+Question 3: **Build your own function and use sapply (name this column - w3apply)  What is the first 10 elements of w3apply?**
+
+Response: **See code below**
+
+```{r Q3}
+
+past2000 <- function(x) {
+  if (is.na(x)) return (x)
+  else if ( x >=2000) return (1)
+  else return (0)
+}
+
+AmesData$w3apply <- sapply(AmesData$Year_Built, past2000)
+head(AmesData$w3apply, 10)
+```
+
+Question 4: **Create a column w3diff which is the difference of the two columns w3ifelse and w3apply. DO NOT use a for loop or the apply set of functions for this step. Simple subtraction will work. What is the total sum of this column?**
+
+
+Response: **See code below**
+
+```{r Q4}
+AmesData$w3diff <- AmesData$w3apply - AmesData$w3for
+sum(AmesData$w3diff)
+
+```
+
+As we can see, the difference is 0.  
+
+
+

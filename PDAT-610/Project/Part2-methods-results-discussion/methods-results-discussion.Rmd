@@ -1,0 +1,39 @@
+---
+output: 
+  bookdown::pdf_document2:
+    fig_caption: yes
+    number_sections: yes
+    toc: yes
+bibliography: references.bib
+---
+
+```{r processed_code, echo=FALSE, include=FALSE,warning=FALSE}
+library(AmesHousing)
+library(patchwork)
+library(dplyr)
+library(tidyverse)
+library(geodist)
+library(ggplot2) # Library to create some nice looking graphs.
+ames <- make_ordinal_ames()
+```
+
+
+
+## Methods 
+
+### Internal house factors
+ We will first see what internal factors contribute most to the overall sales price of the house.  These factors are intrinsic to the home itself rather than external such as school district, disntance to school, neighborhood, etc.  It should also be noted that these fields are easily retrieved from most assessor data and will also be important to home buyers.  While locations of homes may vary, many of these internal factors still play an important role in the sale of a house.
+
+### Outliers
+First we will look at any outliers within the fields.  Normally, we would not remove any outlier data if we don't have a good reason to.  However, from @de2011ames, it is recommended to remove homes that have more than 4000 square feet of area (see @de2011ames), as they are true outliers and don't reflect market values at the time.  We will keep all other data values, as there is no apparent reason for them to be removed.  
+
+Additionally, we will also only consider homes that were sold after 1950.  .  
+
+```{r ggOzPlot, echo=FALSE, fig.cap="Mighty Doge"}
+library(AmesHousing)
+ames <- make_ordinal_ames()
+plot(ames$Year_Remod_Add, ames$Year_Built, xlab = "Year Remodeled", ylab = "Year Built", main = "Year Built vs Year Remodeled")
+```
+(See Figure \@ref(fig:ggOzPlot)).  
+
+\newpage

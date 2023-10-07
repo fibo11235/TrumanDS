@@ -1,0 +1,78 @@
+---
+# title: "Spatial Regression of Housing Prices"
+output:
+  pdf_document:
+    fig_caption: yes
+bibliography: references.bib
+---
+
+
+```{r processed_code, echo=FALSE, include=FALSE,warning=FALSE}
+library(AmesHousing)
+library(patchwork)
+library(dplyr)
+library(tidyverse)
+library(geodist)
+library(ggplot2) # Library to create some nice looking graphs.
+data("ames_raw")
+
+data("ames_geo")
+data("ames_schools_geo")
+
+#### First calculate the distance to the closest school
+
+dist <- geodist_vec(x1=ames_schools_geo$Longitude, y1= ames_schools_geo$Latitude, 
+                    x2=ames_geo$Longitude, y2=ames_geo$Latitude, measure = "geodesic") / 1000
+
+# get minimum distance
+mdist <- apply(dist, 2, min)
+ames_geo$Distance <- mdist
+jnd <- ames_geo %>%
+  select("PID","Distance")
+
+ames_raw <- merge(ames_raw, jnd, "PID")
+ames_raw$Distance
+
+ames_raw$`Garage Area`
+# data("ames_new")
+amesfixed <- ames_raw %>% 
+  mutate(Age = 2011 - `Year Built`)
+
+amesfixed <- amesfixed %>% 
+  mutate(RemodelAge = 2011 - `Year Remod/Add`)
+
+
+##### merge the data
+
+
+
+amesfixed <- rename(amesfixed, Lot.Area = `Lot Area`)
+amesfixed <- rename(amesfixed, Gr.Liv.Area=`Gr Liv Area`)
+amesfixed <- rename(amesfixed, Garage.Area=`Garage Area`)
+amesfixed <- rename(amesfixed, MS.Zoning=`MS Zoning`)
+
+amesUse <- amesfixed %>% 
+  filter(Gr.Liv.Area <= 4000)
+
+
+amesUse <- amesUse %>%
+  select(Gr.Liv.Area, Garage.Area, Age, RemodelAge, SalePrice, Distance) %>%
+  drop_na()
+
+
+```
+
+# Abstract
+
+This paper seeks to predict house prices using Multiple Linear Regression using four variables from the Ames Housing Dataset @de2011ames.  The Ames Housing Dataset contains 2930 housing records with 80 explanatory variables from the Ames, Iowa Assessor's Office. The question we want to ask is: Can we reasonably predict house prices only using a few fields that most people could easily access.  The fields we chose both are external factors, such as distance from school and subdivision, and internal factors such as Ground Floor area, Basement area, overall condition, etc.  We will explore if linear regression is a suitable model for home price prediction and what attributes contribute the most to the home sale price.  
+
+## Introduction
+
+Home prices are an important factor in a society's overall economic health.  Historically, purchasing a home gives an individual tremendous economic advantage over a rentor, since the home buyer can build equity into their property.  The housing market is a societal and economic indicator by showing how that particular society values homes and home ownership.  Indeed, according to @olga2019housing, the housing market can provide key insights into the economic health of that society beyond normal banking indicators.  Hence, the ability to accurately predict the price of a house will allow the prospective buyer to better understand what attributes of a house are most valuable, and also what attributes of a home contributes most to its sale.  The housing dataset we will be using is the Ames Dataset (@de2011ames), a dataset of over 2900 houses and attributes of the home such as condition, location, ground floor area, sales price, etc.  The dataset can be found from the Ames, Iowa assessor's office and is readily accessible for anyone to use.
+
+### Predictive model
+While more advanced machine learning techniques such as random forest regresser and extreme gradient boosting often have better results for predicting home prices, these techniques require a more advanced understanding of machine learning principles that a layperson would not necessarily have.  We will investigate internal home factors such as ground floor living area and basement area and external factors such as distance to school and subdivision. 
+
+The model we will use is a simple multivariate linear regression model.  A linear regression model can be described as $y^{(i)} = W_{1}x^{(i)}_{1} + W_{2}x^{(i)}_{2} + \cdots + W_{n}x^{(i)}_{n} + b^{(i)} + \epsilon^{(i)}$, where $y^{(i)}$ is one of the desired predicted variables, $x^{(i)}_k$ is the corresponding explanitory variable, $b^{(i)}$ is the intercept/bias, and $\epsilon^{(i)}$ is the residual between $W_{1}x_{1} + W_{2}x_{2} + \cdots + W_{n}x_{n} + b$ and $y$.   Linear regression is relatively easy to understand and requires zero hyperparameter tuning.  It's a type of model that someone could easily build in excel or another spreadsheet type of software.  Housing data such as the Ames dataset is also publically available through a city or county assessors office, thus almost anyone can run this type of model with only a little bit of research. 
+
+## References

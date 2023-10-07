@@ -1,0 +1,93 @@
+---
+title: "Assignment 1-2"
+author: Steven Spiegel
+date: "2023-08-20"
+output: 
+  pdf_document: default
+---
+
+<!-- ```{r setup, include=FALSE} -->
+<!-- knitr::opts_chunk$set(echo = TRUE) -->
+<!-- ``` -->
+
+### Module 1 Assignment 1-2
+
+### Assignment 1-2 details
+* The goal of this assignment is to convert the code/answers from **Assignment 1-1** into **RMarkdown**.
+  * The answerable questions from 1-1 were 3, 4, 5, and 6.  Each question will be demarked by a new heading.
+  
+#### Assignment 1-1, question 1
+* Question: *Finish walking through this lab. (The actual lab starts on page 2 (right after question #7.)*
+
+* Response: (There is no response for this question)
+
+#### Assignment 1-1, question 2
+* Question: **Use the + button to create a new R script.  Save it with a filename that
+looks like "lab0_yournamehere.R".  Put all the commands you use to
+answer the next questions into the new script file.  Answers to questions
+that aren't code can be set off by #, just as done in this file.**
+
+* Response: (There is no response for this question)
+
+#### Assignment 1-1, question 3
+
+* Quesion: **Use the "summary" command to get a basic summary of each of the variables
+in the TitanicSurvival data set.  Note that the type of summary you get
+depends on the data type of each variable. You need to install Titanic package first as below.**
+
+* Response:
+```{r Q3}
+library(carData)
+summary(TitanicSurvival)
+```
+
+#### Assignment 1-1, question 4
+
+* Quesion: **Use the ? operator to read about the "table" command.  Then create a
+table that shows the number of people who survived and didn't survive in
+each passenger class.  What pattern do you see in the data?**
+
+* Response:
+```{r Q4}
+### First determine if there are any NAs in each of the pertinent columns
+sum(is.na(TitanicSurvival$survived))
+sum(is.na(TitanicSurvival$passengerClass))
+#### No NAs in these columns
+surv_table <- table(TitanicSurvival$passengerClass, TitanicSurvival$survived)
+surv_table
+```
+*The number of people in 3rd class have many more people who did not survive (25% survival rate) compared to first and second (62% and 43%, respectively)*
+
+#### Assignment 1-1, question 5
+
+* Quesion: **Use the "hist" command to make a histogram of ages.  Do you notice
+anything interesting in the shape of the histogram?**
+
+* Response:
+```{r echo=FALSE}
+#### Make a histogram of ages
+hist(TitanicSurvival$age, xlab = "Age of titanic passengers",main = "Histogram of Passenger Ages")
+```
+*The histogram appears to be skewed right*
+
+#### Assignment 1-1, question 6
+
+* Quesion: **Use the ? operator to learn about the "boxplot" command.  Hint: Often the
+examples at the end of the help file are especially helpful.  Make
+side-by-side boxplots that show the distribution of ages for survivors
+and for those who didn't survive.  Does it appear that there is a
+difference in the age distribution of the two groups?**
+
+* Response:
+```{r Q6}
+boxplot(TitanicSurvival$age ~ TitanicSurvival$survived, xlab = "Survived", ylab = "Age", main= "Age Distribution of passengers by survival")
+```
+*There seems to be very little difference in the age distribution.  The Age distribution of those who didn't survive has more outlier values.*
+
+***
+
+### Assignment 1-1, question 7
+* Question: **Save your script file with only the commands you used and the answers to the questions that were asked (question 3,4,5, and 6).  Copy-and-paste that RScript onto the word file and submit it as your assignment 1 on Blackboard. Submit the output for question 3,4,5, and 6 as well.**
+
+* Response: (There is no response for this question)
+

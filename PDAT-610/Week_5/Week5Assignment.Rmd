@@ -1,0 +1,34 @@
+---
+title: "Assignment 5"
+output: html_document
+date: "2023-09-25"
+---
+
+### Assignment 5
+Below are my answers to Assignment 5
+
+Question 1: **This first problem will have you explore the AmesHousing data set in order to discover why we had to limit our use of data to homes built on or after 1950.**
+
+Part A: **First, let’s look at what we would have found if we hadn’t looked only at homes built after 1950.  Write some code to**
+
+* load the ```AmesHousing``` data set into R and create the dataframe ```ames```.
+
+* create a new column called ```Remodeled```, as we did in the lecture notes, that will be true if ```Year_Built != Year_Remod_Add```
+* sample 500 data points from the ```ames``` dataframe, using ```set.seed(248)``` to make sure we all get the same sample
+
+* run an independent-sample t-test to test whether the means of the remodeled and nonremodeled groups are different.
+
+Response: ***See code below***
+```{r Q1A}
+library(AmesHousing)
+library(tidyverse)
+# data(ames_raw)
+ames <- make_ordinal_ames()
+
+# tr <- ames$Year_Built != ames$Year_Remod_Add
+```
+
+
+<!-- Part B: **Compare the results of this t-test to those shown in the lecture notes.  There should be on aspect that's markedly different.**  -->
+
+<!-- Response: The p-value  -->
