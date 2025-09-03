@@ -27,8 +27,6 @@ __pycache__/
 *.Rbuildignore
 *.log
 *.html
-*.pdf
 *.tex
-*.md
 _book/
 _site/
