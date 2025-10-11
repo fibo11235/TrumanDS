@@ -1,0 +1,11 @@
+[
+    "st_peters.laz",
+    {
+        "type":"filters.divider",
+        "count":"1000"
+    },
+    {
+        "type":"writers.las",
+        "filename":"./split/out_st_peters_#.las"
+    }
+]
