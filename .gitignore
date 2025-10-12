@@ -4,6 +4,7 @@ __pycache__/
 *.pyd
 *.pyo
 *.las
+*.laz
 .idea/
 .vscode/
 *.swp

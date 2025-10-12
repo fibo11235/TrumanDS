@@ -60,6 +60,9 @@ def import_las(path) -> tuple:
     return pts, xyz, metadata, int(num_points)
 
 
+
+
+
 def generateLas(js : str, X_bound : list, Y_bound: list, splitter : float, metadata_dump : str = "/home/sspiegel/CapstoneData/metadata") -> None:
    
     """
@@ -80,8 +83,12 @@ def generateLas(js : str, X_bound : list, Y_bound: list, splitter : float, metad
     x_split = np.arange(x_min, x_max, splitter)
     y_split = np.arange(y_min, y_max, splitter)
 
+
+
     for i in range(len(x_split)-1):
         for j in range(len(y_split)-1):
+            
+
             if (cntr + 1) % 10 == 0:
                 print(f"""Processing Xbounds {x_split[i]} - {x_split[i + 1]}, YBounds {y_split[0]} - {y_split[1]}\n\n""")
             bounds = f"([{x_split[i]},{x_split[i+1]}],[{y_split[j]},{y_split[j+1]}])"
