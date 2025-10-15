@@ -108,7 +108,61 @@ def generateLas(js : str, X_bound : list, Y_bound: list, splitter : float, metad
 
 
 
+def downscale_las(input_las: str, sample_size: float) -> None:
+    """
+    Downsample point cloud using barycenteric method
+    input:
+        input_las: path to input las file
+        sample_size: size of the voxel to downsample to
+    output:
+        None
+    """
 
+    outs = f"""{str(sample_size).split('.')[0]}_{str(sample_size).split('.')[1]}"""
+
+    output = input_las.split(".")[0] + f"_downsampled_{outs}.las"
+
+
+    st = {
+        "pipeline" :
+        [
+    {
+        "type": "readers.las",
+        "filename" : input_las
+    },
+    {
+        "type":"filters.voxelcentroidnearestneighbor",
+        "cell": sample_size
+    },
+    {
+        "type":"writers.las",
+        "filename": output
+    }
+        ]
+    }
+
+    pipeline = pdal.Pipeline(json.dumps(st))
+    outs = pipeline.execute()
+
+
+
+def get_scales(r_0 : float = 0.1, S : int = 8, rho : float = 5, gamma : float = 2) -> list:
+    """
+    Return list of grid sizes and radii for multiscale feature extraction
+    input: 
+        r_0: base scale
+        S: number of scales
+        rho: scaling factor
+        gamma: scaling factor
+    output:
+        list of tuples (radius of search, grid size of downscaled point cloud)
+    """
+    scales = []
+    for s in range(S):
+        radii = r_0 * gamma ** s
+        grid = radii / rho
+        scales.append((radii, grid))
+    return scales
 
 
 
