@@ -2,8 +2,10 @@ import datetime
 import pdal
 import json
 import numpy as np
+import open3d as o3d
 from datetime import datetime, timezone
-import multiprocessing as mp    
+import multiprocessing as mp 
+from scipy.spatial import cKDTree   
 
 js = """{
     "pipeline": [
@@ -145,6 +147,43 @@ def downscale_las(input_las: str, sample_size: float) -> None:
     outs = pipeline.execute()
 
 
+def downscale_ply(input_ply: str, sample_size: float) -> None:
+    """
+    Downsample point cloud using barycenteric method that's in PLY format
+    input:
+        input_ply: path to input ply file
+        sample_size: size of the voxel to downsample to
+    output:
+        None
+    """
+
+    outs = f"""{str(sample_size).split('.')[0]}_{str(sample_size).split('.')[1]}"""
+
+    output = input_ply.split(".")[0] + f"_downsampled_{outs}.ply"
+
+
+    st = {
+        "pipeline" :
+        [
+    {
+        "type": "readers.ply",
+        "filename" : input_ply
+    },
+    {
+        "type":"filters.voxelcentroidnearestneighbor",
+        "cell": sample_size
+    },
+    {
+        "type":"writers.ply",
+        "filename": output
+    }
+        ]
+    }
+
+    pipeline = pdal.Pipeline(json.dumps(st))
+    outs = pipeline.execute()
+
+
 
 def get_scales(r_0 : float = 0.1, S : int = 8, rho : float = 5, gamma : float = 2) -> list:
     """
@@ -164,6 +203,112 @@ def get_scales(r_0 : float = 0.1, S : int = 8, rho : float = 5, gamma : float = 
         scales.append((radii, grid))
     return scales
 
+resList = []
+
+featList = []
+covList = []
+eigList = []
+featList = []
+
+
+def getFeatures(point_data : np.array,test_pc : o3d.geometry.PointCloud,tree : o3d.geometry.KDTreeFlann,r: float) -> dict:
+# def getFeatures(point_data : np.array,tree : cKDTree,r: float) -> dict:
+
+    """
+    Return dictionary of geometric features for a given point and radius
+    input: 
+        point_data: (3,1) array of point coordinates
+        test_pc : open3d point cloud object of downsampled point cloud
+        tree : KDTree object of downsampled point cloud
+        r : radius of search
+    output:
+        dictionary of geometric features
+    """
+    e_z = np.array([[0.,0.,1]]) # unit vector in z direction
+    srch = tree.search_radius_vector_3d(point_data, r)[1]
+    srch = np.asarray(srch)
+    done_points = np.asarray(test_pc.points)[srch]
+    N = done_points.shape[0]
+    if done_points.shape[0] < 5:
+        feat = np.array((0., 0., 0., 0., 0., 0., 0., 0., 0., N))
+        cov = np.zeros((3,3))
+        sorted_eigs = np.zeros(3)
+        sorted_vecs = np.zeros((3,3))
+    else:
+        avg =  done_points - np.mean(done_points, axis=0)
+        cov  = np.cov(avg.T, bias=True)
+        covList.append(cov)
+        eigs, vecs = np.linalg.eig(cov)
+        eigList.append(eigs)
+        sort_indices = np.argsort(eigs)
+        sorted_eigs = eigs[sort_indices]
+        sorted_vecs = vecs[:, sort_indices]
+
+
+
+        sum_of_eigs = sorted_eigs.sum()
+        omni = sorted_eigs.prod()**(1/3)
+        entro = -1 * (sorted_eigs*np.log((sorted_eigs + 1e-9))).sum()
+        lin = (sorted_eigs[0] - sorted_eigs[1]) / (sorted_eigs[0] + 1e-9)
+        pln = (sorted_eigs[1] - sorted_eigs[2]) / (sorted_eigs[0] + 1e-9)
+        sph = sorted_eigs[2] / (sorted_eigs[0] + 1e-9)
+        curv = sorted_eigs[2] / np.sum(sorted_eigs)
+        vert_1 = np.squeeze(np.abs((np.pi / 2) - np.arccos(sorted_vecs[0].reshape(1,-1)@e_z.T)))
+        vert_2 = np.squeeze(np.abs((np.pi / 2) - np.arccos(sorted_vecs[2].reshape(1,-1)@e_z.T)))
+
+
+        feat = np.array((sum_of_eigs, omni, entro, lin, pln, sph, curv, vert_1, vert_2, N))
+
+    return {"features" : feat, "covariance_matrix" : cov, "eigenvalues" : sorted_eigs, "eigenvectors" : sorted_vecs}
+
+
+
+# def getFeaturesParallel(point_data : np.array,r: float) -> dict:
+def getFeaturesParallel(test_pc : np.array, neighs : np.array) -> np.array:
+
+    """
+    Return dictionary of geometric features for a given point and radius (using parallel processing)
+    input: 
+        test_pc :  point cloud object of downsampled point cloud
+        neighs : Index of neighbors
+    output:
+        dictionary of geometric features
+    """
+    e_z = np.array([[0.,0.,1]]) # unit vector in z direction
+    done_points  = test_pc[neighs]
+    N = done_points.shape[0]
+    if done_points.shape[0] < 5:
+        feat = np.array((0., 0., 0., 0., 0., 0., 0., 0., 0., N))
+        cov = np.zeros((3,3))
+        sorted_eigs = np.zeros(3)
+        sorted_vecs = np.zeros((3,3))
+    else:
+        avg =  done_points - np.mean(done_points, axis=0)
+        cov  = np.cov(avg.T, bias=True)
+        covList.append(cov)
+        eigs, vecs = np.linalg.eig(cov)
+        eigList.append(eigs)
+        sort_indices = np.argsort(eigs)
+        sorted_eigs = eigs[sort_indices]
+        sorted_vecs = vecs[:, sort_indices]
+
+
+
+        sum_of_eigs = sorted_eigs.sum()
+        omni = sorted_eigs.prod()**(1/3)
+        entro = -1 * (sorted_eigs*np.log((sorted_eigs + 1e-9))).sum()
+        lin = (sorted_eigs[0] - sorted_eigs[1]) / (sorted_eigs[0] + 1e-9)
+        pln = (sorted_eigs[1] - sorted_eigs[2]) / (sorted_eigs[0] + 1e-9)
+        sph = sorted_eigs[2] / (sorted_eigs[0] + 1e-9)
+        curv = sorted_eigs[2] / np.sum(sorted_eigs)
+        vert_1 = np.squeeze(np.abs((np.pi / 2) - np.arccos(sorted_vecs[0].reshape(1,-1)@e_z.T)))
+        vert_2 = np.squeeze(np.abs((np.pi / 2) - np.arccos(sorted_vecs[2].reshape(1,-1)@e_z.T)))
+
+
+        feat = np.array((sum_of_eigs, omni, entro, lin, pln, sph, curv, vert_1, vert_2, N))
+
+    # return {"features" : feat, "covariance_matrix" : cov, "eigenvalues" : sorted_eigs, "eigenvectors" : sorted_vecs}
+    return feat
 
 
 if __name__ == "__main__":

@@ -1,0 +1,17 @@
+{
+        "pipeline" :
+        [
+    {
+        "type": "readers.ply",
+        "filename" : "L001.ply"
+    },
+    {
+        "type":"filters.voxelcenternearestneighbor",
+        "cell": 2.56
+    },
+    {
+        "type":"writers.ply",
+        "filename": "L001_delete_1.ply"
+    }
+        ]
+    }
