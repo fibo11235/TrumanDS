@@ -237,9 +237,9 @@ def getFeatures(point_data : np.array,test_pc : o3d.geometry.PointCloud,tree : o
     else:
         avg =  done_points - np.mean(done_points, axis=0)
         cov  = np.cov(avg.T, bias=True)
-        covList.append(cov)
+        # covList.append(cov)
         eigs, vecs = np.linalg.eig(cov)
-        eigList.append(eigs)
+        # eigList.append(eigs)
         sort_indices = np.argsort(eigs)
         sorted_eigs = eigs[sort_indices]
         sorted_vecs = vecs[:, sort_indices]
@@ -272,12 +272,12 @@ def getFeaturesParallel(test_pc : np.array, neighs : np.array) -> np.array:
         test_pc :  point cloud object of downsampled point cloud
         neighs : Index of neighbors
     output:
-        dictionary of geometric features
+        array of geometric features
     """
     e_z = np.array([[0.,0.,1]]) # unit vector in z direction
     done_points  = test_pc[neighs]
     N = done_points.shape[0]
-    if done_points.shape[0] < 5:
+    if done_points.shape[0] < 5: # Maintain for stability
         feat = np.array((0., 0., 0., 0., 0., 0., 0., 0., 0., N))
         cov = np.zeros((3,3))
         sorted_eigs = np.zeros(3)
@@ -285,10 +285,9 @@ def getFeaturesParallel(test_pc : np.array, neighs : np.array) -> np.array:
     else:
         avg =  done_points - np.mean(done_points, axis=0)
         cov  = np.cov(avg.T, bias=True)
-        covList.append(cov)
+        # covList.append(cov)
         eigs, vecs = np.linalg.eig(cov)
-        eigList.append(eigs)
-        sort_indices = np.argsort(eigs)
+        sort_indices = np.argsort(eigs)[::-1]
         sorted_eigs = eigs[sort_indices]
         sorted_vecs = vecs[:, sort_indices]
 
