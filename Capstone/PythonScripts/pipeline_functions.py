@@ -310,6 +310,9 @@ def getFeaturesParallel(test_pc : np.array, neighs : np.array) -> np.array:
     return feat
 
 
+
+
+
 if __name__ == "__main__":
     X_bound = [-10099875.0,-10083682.0]
     Y_bound = [4685827.0,4696129.0]
