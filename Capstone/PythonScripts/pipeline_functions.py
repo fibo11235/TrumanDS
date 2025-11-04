@@ -6,6 +6,8 @@ import open3d as o3d
 from datetime import datetime, timezone
 import multiprocessing as mp 
 from scipy.spatial import cKDTree   
+from pandas import DataFrame
+from plyfile import PlyData, PlyElement
 
 js = """{
     "pipeline": [
@@ -275,6 +277,8 @@ def getFeaturesParallel(test_pc : np.array, neighs : np.array) -> np.array:
         array of geometric features
     """
     e_z = np.array([[0.,0.,1]]) # unit vector in z direction
+
+
     done_points  = test_pc[neighs]
     N = done_points.shape[0]
     if done_points.shape[0] < 5: # Maintain for stability
@@ -310,6 +314,129 @@ def getFeaturesParallel(test_pc : np.array, neighs : np.array) -> np.array:
     return feat
 
 
+
+def build_ply_files(total_dataframe : DataFrame,allAtrs : np.array, output : str, num_features : int = 7) -> None:
+    """
+    Build PLY files from total dataframe with features
+    input:
+        total_dataframe: pandas dataframe with features
+    output:
+        None
+    """
+    
+
+    for i in range(1, num_features):
+        ls = [col for col in list(total_dataframe) if col.endswith(f"""radius{i}""")]
+        ls = ['X','Y','Z'] + ls + ['label']
+        partial_df = total_dataframe[ls]
+
+        tpsOut = []
+        for idx, tpe in partial_df.dtypes.to_dict().items():
+            if tpe == 'int64':
+                tpsOut.append((idx, 'i4'))
+            elif tpe == 'float64':
+                tpsOut.append((idx, 'f8'))
+                
+        vertex_data = np.empty(allAtrs.shape[0], dtype=tpsOut)
+        
+        for t in tpsOut:
+            vertex_data[t[0]] = partial_df[t[0]].values
+        
+            
+        el = PlyElement.describe(vertex_data, 'vertex')
+        
+
+        PlyData([el], text=False).write(f"""/home/sspiegel/CapstoneData/Paris/Toronto_3D/PC_with_features/{output}{i}.ply""")
+
+
+class Cylinder(object):
+    """
+    Cylinder object for neighborhood search in point clouds.
+
+    This class defines a cylinder based on a search radius R, where:
+        - self.r: radius of the cylinder (computed as R / sqrt(2))
+        - self.h: height of the cylinder (computed as 2*R / sqrt(2))
+    """
+
+    def __init__(self, R: float) -> None:
+        """
+        Initialize a Cylinder object with a given search radius.
+
+        Args:
+            R (float): Search radius (typically the radius of the sphere).
+
+        Sets:
+            self.r (float): Radius of the cylinder.
+            self.h (float): Height of the cylinder.
+        """
+        self.r = R / np.sqrt(2)
+        self.h = 2*R / np.sqrt(2)
+
+        
+    def computePoints(self, BasePC : np.array, CandidatePoints : np.array, distMat: np.array) -> np.array:
+
+        """
+            Get points that fit within the cylinder object centered at a point
+            input:
+                    BasePC : Center point of neighborhood
+                    CandidatePoints : downsampled point cloud that is within R distance of BasePoint
+                    distMat : array of indicies of points that are within R distance of Base Point
+            output:
+                    CandidateIDs : array of indicies that are within the cylinder centered at BasePoint
+        """
+
+        if BasePC.ndim != 2:
+            BasePC = np.squeeze(BasePC).reshape(1, -1)
+        
+        BasePointTop = BasePC + np.array([[0.,0.,self.h/2]])
+        BasePointBottom = BasePC - np.array([[0.,0.,self.h/2]])
+
+        CandidatePointsIDS = np.hstack((CandidatePoints, distMat.reshape(-1,1))) # Keep track of the indexes
+        
+
+        bb = CandidatePointsIDS[(CandidatePointsIDS[:,2] <= BasePointTop[:,2]) & # Get points with z coordinates less than top point
+        (CandidatePointsIDS[:,2] >= BasePointBottom[:,2]) &  # Get points with z coordinates less than bottom point
+        (np.sum(((CandidatePointsIDS[:,0] - BasePC[:,0])**2, (CandidatePointsIDS[:,1] - BasePC[:,1])**2), axis = 0) <= self.r**2)] # Get points that are within r distance
+
+        return bb[:,-1].astype(int)
+
+
+    def computePointsParallel(self, BasePC : np.array, CandidatePointsAll : np.array, distMat: np.array) -> np.array:
+
+            """
+                Get points that fit within the cylinder object centered at a point
+                input:
+                        BasePC : Center point of neighborhood
+                        CandidatePoints : downsampled point cloud (entire point cloud)
+                        distMat : array of indicies of points that are within R distance of Base Point
+                output:
+                        CandidateIDs : array of indicies that are within the cylinder centered at BasePoint
+            """
+            
+            if BasePC.ndim != 2:
+                BasePC = np.squeeze(BasePC).reshape(1, -1)
+            
+
+            CandidatePoints = CandidatePointsAll[distMat]
+            BasePointTop = BasePC + np.array([[0.,0.,self.h/2]])
+            BasePointBottom = BasePC - np.array([[0.,0.,self.h/2]])
+
+            CandidatePointsIDS = np.hstack((CandidatePoints, distMat.reshape(-1,1))) # Keep track of the indexes
+            
+
+            bb = CandidatePointsIDS[(CandidatePointsIDS[:,2] <= BasePointTop[:,2]) & # Get points with z coordinates less than top point
+            (CandidatePointsIDS[:,2] >= BasePointBottom[:,2]) &  # Get points with z coordinates less than bottom point
+            (np.sum(((CandidatePointsIDS[:,0] - BasePC[:,0])**2, (CandidatePointsIDS[:,1] - BasePC[:,1])**2), axis = 0) <= self.r**2)] # Get points that are within r distance
+
+            return bb[:,-1].astype(int)
+        
+
+        
+                                
+
+        
+
+        
 
 
 
