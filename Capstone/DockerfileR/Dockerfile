@@ -1,26 +1,10 @@
 FROM rocker/tidyverse:latest
 
-RUN apt-get update && apt-get install -y python3-pip && pip3 install virtualenv
+
 
 #RUN pip3 install virtualenv
 
-RUN apt-get update && \
-  install2.r --deps TRUE keras \
-  tidymodels \
-  sf \
-  terra \
-  spData \
-  rpostgis \
-  leaflet \
-  plotly \
-  leaflet.extras \
-  quanteda \
-  reshape2 \
-  tidytext \
-  sparklyr \
-  rnaturalearth \
-  rnaturalearthdata \
-  multidplyr
+
 
 
 RUN apt-get clean all && \

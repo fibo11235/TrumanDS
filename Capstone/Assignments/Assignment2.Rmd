@@ -68,4 +68,25 @@ The cacluated covariance matrix for a given point $p \in C$ is
 where $p_v \in C_v$ and satisfies the neighborhood criteria about point $p$.  Since $Cov(p)$ is a symmetric matrix, it has 3 real-valued eigenvalues $\lambda_{1} \geq \lambda_{2} \geq \lambda_{3}$ with corresponding eigenvectors $(v_1, v_2, v_3)$.  These have geometric meaning as outlined by [@rusu_semantic_2010].
 
 
+## Initial results
+
+Initial tests on mobile data gave the following results
+
+|              |   precision |   recall |   f1-score |
+|:-------------|------------:|---------:|-----------:|
+| ground       |        0.99 |     0.98 |       0.98 |
+| building     |        0.99 |     0.83 |       0.91 |
+| signage      |        0.49 |     0.67 |       0.57 |
+| bollard      |        0.13 |     0.09 |       0.11 |
+| trash can    |        0.43 |     0.5  |       0.46 |
+| barrier      |        0.03 |     0.44 |       0.05 |
+| pedestrian   |        0.2  |     0.11 |       0.14 |
+| car          |        0.8  |     0.92 |       0.86 |
+| vegetation   |        0.61 |     0.82 |       0.7  |
+| accuracy     |        0.91 |     0.91 |       0.91 |
+| macro avg    |        0.52 |     0.6  |       0.53 |
+| weighted avg |        0.96 |     0.91 |       0.93 |
+
+This was done over 6 radial neighborhoods, ranging from 0.1 meters to 3.2 meters.  Ground and building had high F1 scores while barrier, bollar, and pedestrian gave poor results.  It's important to note that ground, building, and car points are heavily unbalanced in the data.  Including more data from low scoring classes may improve the overall results.  This week I will complete the cylindrical neighborhood method on the mobile dataset and move on to the aerial data to compare methods.   
+
 ## Appendix

@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 import multiprocessing as mp 
 from scipy.spatial import cKDTree   
 from pandas import DataFrame
+import pandas as pd
+from math import sqrt
 from plyfile import PlyData, PlyElement
 
 js = """{
@@ -205,6 +207,38 @@ def get_scales(r_0 : float = 0.1, S : int = 8, rho : float = 5, gamma : float = 
         scales.append((radii, grid))
     return scales
 
+
+
+def get_scales_cyl(r_0 : float = 0.1, S : int = 8, rho : float = 5, gamma : float = 2, keep_radial_downsample: bool = False, rnd: int = 4) -> list:
+    """
+    Return list of grid sizes and radii for multiscale feature extraction
+    input: 
+        r_0: base scale
+        S: number of scales
+        rho: scaling factor
+        gamma: scaling factor
+        keep_radial_downsample: Keep downsampling of radial method
+    output:
+        list of tuples (radius of search, grid size of downscaled point cloud)
+    """
+    scales = []
+    for s in range(S):
+
+            
+        radii = np.round(np.sqrt(2)*r_0 * gamma ** s, 9)
+        radii = radii.item()
+        if keep_radial_downsample:
+            
+            radiiGrid = r_0 * gamma ** s
+        else:
+            radiiGrid = radii
+            
+        grid = radiiGrid / rho
+        radii = np.round(radii, rnd).item()
+        grid = np.round(grid, rnd).item()
+        scales.append((radii, grid))
+    return scales
+
 resList = []
 
 featList = []
@@ -315,7 +349,7 @@ def getFeaturesParallel(test_pc : np.array, neighs : np.array) -> np.array:
 
 
 
-def build_ply_files(total_dataframe : DataFrame,allAtrs : np.array, output : str, num_features : int = 7) -> None:
+def build_ply_files(fi : str, output: str, cols : list = ["EigenSum","omnivariance","entropy","linearity","planarity","sphericity","curvature","verticality1","verticality2","count"]) -> None:
     """
     Build PLY files from total dataframe with features
     input:
@@ -324,29 +358,38 @@ def build_ply_files(total_dataframe : DataFrame,allAtrs : np.array, output : str
         None
     """
     
+    xyz = np.load(fi)["array1"]
+    features = np.load(fi)["array2"]
+    cls = np.load(fi)["array3"]
+    ls = ["X","Y","Z"] + cols + ["label"]
+    arrs = np.hstack((xyz, features, cls.reshape(-1,1)))
+    
+    total_dataframe = pd.DataFrame(arrs, columns = ls)
+    total_dataframe["count"] = total_dataframe["count"].astype(int)
+    total_dataframe["label"] = total_dataframe["label"].astype(int)
 
-    for i in range(1, num_features):
-        ls = [col for col in list(total_dataframe) if col.endswith(f"""radius{i}""")]
-        ls = ['X','Y','Z'] + ls + ['label']
-        partial_df = total_dataframe[ls]
+    # for i in range(1, num_features):
+    #     ls = [col for col in list(total_dataframe) if col.endswith(f"""radius{i}""")]
+    #     ls = ['X','Y','Z'] + ls + ['label']
+    #     partial_df = total_dataframe[ls]
 
-        tpsOut = []
-        for idx, tpe in partial_df.dtypes.to_dict().items():
-            if tpe == 'int64':
-                tpsOut.append((idx, 'i4'))
-            elif tpe == 'float64':
-                tpsOut.append((idx, 'f8'))
-                
-        vertex_data = np.empty(allAtrs.shape[0], dtype=tpsOut)
-        
-        for t in tpsOut:
-            vertex_data[t[0]] = partial_df[t[0]].values
-        
+    tpsOut = []
+    for idx, tpe in total_dataframe.dtypes.to_dict().items():
+        if tpe == 'int64':
+            tpsOut.append((idx, 'i4'))
+        elif tpe == 'float64':
+            tpsOut.append((idx, 'f8'))
             
-        el = PlyElement.describe(vertex_data, 'vertex')
+    vertex_data = np.empty(arrs.shape[0], dtype=tpsOut)
+    
+    for t in tpsOut:
+        vertex_data[t[0]] = total_dataframe[t[0]].values
+    
         
+    el = PlyElement.describe(vertex_data, 'vertex')
+    
 
-        PlyData([el], text=False).write(f"""/home/sspiegel/CapstoneData/Paris/Toronto_3D/PC_with_features/{output}{i}.ply""")
+    PlyData([el], text=False).write(output)
 
 
 class Cylinder(object):
