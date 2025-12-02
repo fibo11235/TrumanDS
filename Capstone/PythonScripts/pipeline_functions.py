@@ -316,11 +316,16 @@ def getFeaturesParallel(test_pc : np.array, neighs : np.array) -> np.array:
     done_points  = test_pc[neighs]
     N = done_points.shape[0]
     if done_points.shape[0] < 5: # Maintain for stability
-        feat = np.array((0., 0., 0., 0., 0., 0., 0., 0., 0., N))
+        # feat = np.array((0., 0., 0., 0., 0., 0., 0., 0., 0., N))
+        feat = np.array((0., 0., 0., 0., 0., 0., 0., 0., 0.,0.,0., N))
         cov = np.zeros((3,3))
         sorted_eigs = np.zeros(3)
         sorted_vecs = np.zeros((3,3))
     else:
+        ### Compute Height Features
+        hVar = np.var(done_points[:,2])
+        hRange = done_points[:,2].max() - done_points[:,2].min()
+
         avg =  done_points - np.mean(done_points, axis=0)
         cov  = np.cov(avg.T, bias=True)
         # covList.append(cov)
@@ -342,14 +347,14 @@ def getFeaturesParallel(test_pc : np.array, neighs : np.array) -> np.array:
         vert_2 = np.squeeze(np.abs((np.pi / 2) - np.arccos(sorted_vecs[2].reshape(1,-1)@e_z.T)))
 
 
-        feat = np.array((sum_of_eigs, omni, entro, lin, pln, sph, curv, vert_1, vert_2, N))
+        feat = np.array((sum_of_eigs, omni, entro, lin, pln, sph, curv, vert_1, vert_2,hVar,hRange, N))
 
     # return {"features" : feat, "covariance_matrix" : cov, "eigenvalues" : sorted_eigs, "eigenvectors" : sorted_vecs}
     return feat
 
 
 
-def build_ply_files(fi : str, output: str, cols : list = ["EigenSum","omnivariance","entropy","linearity","planarity","sphericity","curvature","verticality1","verticality2","count"]) -> None:
+def build_ply_files(fi : str, output: str, cols : list = ["EigenSum","omnivariance","entropy","linearity","planarity","sphericity","curvature","verticality1","verticality2","HeightVariance","HeightRange","count"]) -> None:
     """
     Build PLY files from total dataframe with features
     input:
