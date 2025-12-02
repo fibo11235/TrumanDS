@@ -22,9 +22,7 @@ In other words, $p$ is a point in 3 dimensional space that represents the surfac
 ### Radial Neighbors
 Let $r \in \mathbb{R}$ and $p_0 \in C$.  Radial neighborhood are then defined as
 $$
-\begin{equation}
-N(p_0) = \left\{p \mid \Vert p - p_0 \Vert \leq r \right\}
-\end{equation}
+N(p_0) = \left\{ p \mid \Vert p - p_0 \Vert \leq r \right\}
 $$
 
 ### Cylindrical Neighbors 
@@ -33,11 +31,11 @@ Cylindrical nieghborhoods are commonly used in aerial scans.  Let $h \in \mathbb
 
 $$
 N(p_{0}) = 
-  \left\{p = (x, y, z) \mid \\
-  z \leq z_0 + \frac{h}{2} \\ 
-  \land \\
-  z \geq z_0 - \frac{h}{2} \\
-  \land \\
+  \left\{p = (x, y, z) \mid 
+  z \leq z_0 + \frac{h}{2} 
+  \land 
+  z \geq z_0 - \frac{h}{2} 
+  \land 
   \sqrt{(x - x_0)^{2} + (y - y_{0})^{2}} \leq r^{(\text{cyl})} 
   \right\}
 $$

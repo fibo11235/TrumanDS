@@ -1,0 +1,260 @@
+---
+title: "Point Cloud Segmentation using Multiscaled Neighborhoods"
+author: "Steven Spiegel"
+# format: revealjs
+format:
+  revealjs:
+    smaller: true
+    theme: dark
+    scrollable: true
+    slide-number: true
+editor: visual
+# format:
+#   html:
+#     code-overflow: wrap
+bibliography: references.bib
+---
+
+## Outline {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
+
+-   The goal of this project is to compare methods of point cloud segmentation using several neighborhood methods.
+
+-   First we will introduce point clouds and how they differ from other imagery types.
+
+-   Explain how pointwise geometric features can be created using neighborhoods and covariance matricies.
+
+-   Apply a classifier to the point clouds from the varying neighborhood types.
+
+-   View results and future work.
+
+## Point Cloud: The Basics {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
+
+-   A point cloud is a finite subset $C$ of $\mathbb{R}^3$ that is representative of real world objects.
+
+    -   Each point $p \in C$ is defined as $$
+        p = (x, y, z)
+        $$
+
+-   Point clouds are typically generated using active LiDAR (light detection and ranging) scanners or using EO (electro-optical) cameras and photogrammetry.
+
+-   Outdoor LiDAR scans are typically done using a mobile system or an aerial system.
+
+-   Unlike 2D imagery, point cloud data is unstructured and highly irregular.
+
+![Point cloud image of Lille, France](overall.png){fig-alt="Lille total"}
+
+## Point Clouds Samples {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
+
+::: {#fig-pointcould layout-ncol="2"}
+![Lille North](Lille.png){#fig-lille}
+
+![Lille South](Lille2.png){#fig-lille2}
+
+Benchmark LiDAR point cloud dataset of Lille, France
+:::
+
+## Problem Statement
+
+-   We desire to accurately segment point cloud, $C$ using a trained classifier using a multiscaled neighborhood approach similar to the method found in [@thomas_semantic_2018] and [@mohamed_evaluation_2021].
+
+-   The point cloud is derived using a LiDAR scanner attached to a vehicle and driven through an urban setting.
+
+-   The two methods will use point neighborhoods to derive pointwise features.
+
+-   In addition to the approach found in [@thomas_semantic_2018], we will add an additional neighborhood method and compare the results on a mobile LiDAR scan from Lille France [@roynard_paris-lille-3d_2017].
+
+-   Later in this study will compare the two methods on an aerial scan of Dayton, Ohio [@singer_dales_2021]
+
+-   A neighborhood $N$ of point $p_0$ is defined as
+
+$$
+N(p_0) = \left\{p \mid D(p, p_0) < r \right\}
+$$
+
+where $D$ is some distance metric.
+
+## Point Features
+
+-   Point clouds are fundamentally different to other imagery types.
+    -   Typical imagery data consists of a well-structured 2 dimensional grid with RGB color channels.
+    -   This makes learning networks like convoluted neural networks (CNNs) a natural choice for classification and segmentation.
+-   Point cloud segmentation techniques should be independent of
+    -   rotations
+    -   permutations
+    -   translations
+-   Instead of using the coordinates themselves, we derive point features by taking the local neighborhood of a point, $p$.
+
+## Neighborhood definitions in study
+
+-   A radial neighborhood $N$ of a point $p_{0} \in C$ is defined as
+
+$$
+  N(p_{0}) = \left\{p \mid \Vert p - p_{0} \Vert \leq r \right\}
+$$ for a radius, $r$.
+
+-   A cylindrical neighborhood $N$ of a point $p_{0} = (x_0,y_0,z_0) \in C$ is defined as
+
+$$N(p_{0}) = 
+  \left\{p = (x, y, z) \mid \\
+  z \leq z_0 + \frac{h}{2} \\ 
+  \land \\
+  z \geq z_0 - \frac{h}{2} \\
+  \land \\
+  \sqrt{(x - x_0)^{2} + (y - y_{0})^{2}} \leq r^{(cyl)} 
+  \right\}
+$$ where $r^{(cyl)}$, $h$ is the radius and length of the cylinder, respectively.
+
+-   This assumes the center line can be parameterized by the unit vector, $e_z = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$
+
+## Cylinderical vs Radial neighborhoods
+
+::: {#fig-pc layout-ncol="2"}
+![Spherical](radial_random.png){#fig-rad}
+
+![Cylindrical](cylinder_random.png){#fig-cyl}
+
+Example of neighborhood types
+:::
+
+## Point Features
+
+-   Given a point $p_{0}$, we compute the covariance matrix from a neighborhood, $N$ to determine characteristic geometric features of $p_0$ with its neighbors as described in [@rusu_semantic_2010].
+
+$$
+Cov(p_0) = \sum_{p \in N(p_0)} (p-\bar{p})^{T}\cdot(p - \bar{p})
+$$ - This is a $3x3$ symmetric matrix and hence has 3 real-valued eigenvalues ($\lambda_{n \in \left\{1,2,3\right\}}$) and corresponding eigenvectors $v_{n \in \left\{1,2,3\right\}}$.
+
+-   We will assume $\lambda_1 \geq \lambda_2 \geq \lambda_3$.
+
+-   From these eigenvalues and vectors we can compute pointwise features
+
+## Point Features continued
+
+|    Feature    |                  Equation                   |
+|:-------------:|:-------------------------------------------:|
+|   Eigen sum   |           $\sum_{i}^3 \lambda_i$            |
+| Omnivariance  |   $(\prod_{i}^3 \lambda_i)^{\frac{1}{3}}$   |
+|    Entropy    |  $-(\sum_{i}^3 \lambda_{i}log(\lambda_i))$  |
+|   Linearity   | $\frac{\lambda_1 - \lambda_2} {\lambda_1}$  |
+|   Planarity   | $\frac{\lambda_2 - \lambda_3} {\lambda_1}$  |
+|  Sphericity   |       $\frac{\lambda_3} {\lambda_1}$        |
+|   Curvature   | $\frac{\lambda_3} {\sum_{1}^3 \lambda_{i}}$ |
+| Verticality 1 | $|\frac{\pi}{2} - cos^{-1}(v_1\cdot e_z)|$  |
+| Verticality 2 | $|\frac{\pi}{2} - cos^{-1}(v_3\cdot e_z)|$  |
+|  Point Count  |                    $|N|$                    |
+
+## Multi Scaled approach
+
+-   The difficulty in using point features is finding the correct neighborhood size to accurately describe point features.
+
+-   We use various neighborhood sizes and use each computed point feature as a feature for point $p_{0}$.
+
+### Radial
+
+-   For radial neighborhoods, the size of the radius is increased incrementally while the neighborhood points are proportionally downsampled for computational stability.
+
+-   We compute additional radii by
+
+$$
+  r_i = r_02^s
+$$
+
+where $S_i \in \left\{0, 1, 2 \ldots S_n\right\}$
+
+-   We subsample the point cloud by splitting it into a voxel grid (similar to a 2D pixel) of size $gxgxg$ where the point is the barycenter of the voxel.
+
+$$
+  g_i = \frac{r_i}{\rho}
+$$ where $\rho$ is a predetermined factor.
+
+### Cylindrical
+
+-   We use a cylinder that can be defined by the radial neighborhood method.
+    -   This is done by fitting the cylinder within the sphere defined by radius $r_i$.
+-   We can compute the radius and height of the cylinder in terms of $r$. $$
+    r_{i}^{(\text{cyl})} = \frac{r_i}{\sqrt{2}}
+    $$ and $h$ as
+
+$$
+  h^{(\text{cyl})} = \frac{2r_i}{\sqrt{2}}
+$$ - This allows us to define the cylinder in terms of the sphere.
+
+## Classifier
+
+-   We randomly sample a balanced amount per class and apply a random forest classifier.
+
+-   We compute the *F1 Score* and overall accuracy on the remaining points.
+
+-   Every iteration we include a random sample of misclassified points from the remaining training dataset.
+
+-   This is done for a maximum number of increments or until the difference in accuracy metrics fall below a threshold.
+
+<!-- ![Single tree of RF classifier](rf_singleTree.png){fig-rf="Picture of a single tree in a random forest classifier"} -->
+
+## Results - Radial
+
+### Precision/Recall
+
+|              | precision | recall | f1-score |
+|:-------------|----------:|-------:|---------:|
+| ground       |      0.99 |   0.98 |     0.98 |
+| building     |      0.99 |   0.83 |     0.91 |
+| signage      |      0.49 |   0.67 |     0.57 |
+| bollard      |      0.13 |   0.09 |     0.11 |
+| trash can    |      0.43 |    0.5 |     0.46 |
+| barrier      |      0.03 |   0.44 |     0.05 |
+| pedestrian   |       0.2 |   0.11 |     0.14 |
+| car          |       0.8 |   0.92 |     0.86 |
+| vegetation   |      0.61 |   0.82 |      0.7 |
+| accuracy     |      0.91 |   0.91 |     0.91 |
+| macro avg    |      0.52 |    0.6 |     0.53 |
+| weighted avg |      0.96 |   0.91 |     0.93 |
+
+### Confustion Matrix
+
+|            | ground | building | signage | bollard | trash can | barrier | pedestrian |  car | vegetation |
+|:-----------|-------:|---------:|--------:|--------:|----------:|--------:|-----------:|-----:|-----------:|
+| ground     |   0.98 |        0 |       0 |       0 |         0 |       0 |          0 | 0.01 |       0.01 |
+| building   |   0.01 |     0.83 |       0 |       0 |         0 |     0.1 |          0 |    0 |       0.04 |
+| signage    |      0 |     0.25 |    0.67 |       0 |      0.01 |    0.02 |          0 |    0 |       0.06 |
+| bollard    |   0.17 |        0 |    0.69 |    0.09 |      0.01 |       0 |          0 |    0 |       0.03 |
+| trash can  |   0.05 |        0 |    0.04 |    0.01 |       0.5 |    0.13 |       0.02 | 0.13 |       0.12 |
+| barrier    |      0 |     0.08 |    0.12 |       0 |      0.02 |    0.44 |          0 | 0.03 |        0.3 |
+| pedestrian |      0 |        0 |    0.13 |       0 |      0.02 |    0.08 |       0.11 | 0.09 |       0.57 |
+| car        |      0 |        0 |       0 |       0 |      0.01 |    0.02 |          0 | 0.92 |       0.04 |
+| vegetation |   0.07 |     0.01 |    0.02 |       0 |      0.02 |    0.03 |          0 | 0.03 |       0.82 |
+
+## Future Work
+
+-   This small study analyzed the differences between two different definitions of neighborhoods and how it may affect segmentation of outdoor point clouds.
+
+-   Neighborhoods and neighborhood definitions play an important role in modern deep learning networks
+
+    -   Modern convoluted neural networks such as KPConv use localized neighborhoods as part of the convolution operation [@noauthor_kpconv_nodate].
+
+![Pointwise CNN](KPConv_kernel.png){fig-alt="KPConv"}
+
+-   More modern approaches (pointwise CNNs) will be tested using a cylindrical neighborhood method.
+
+## Code
+
+-   This presentation was created using [Quarto in R Studio](https://quarto.org/docs/tools/rstudio.html#:~:text=new%20Quarto%20documents:-,Render%20and%20Preview,existing%20Rmd%20document%20without%20changes.). Rstudio was run using a [Docker container](https://www.docker.com/).
+
+-   OS used was [Ubuntu 22.04 (Jammy Jellyfish)](https://releases.ubuntu.com/jammy/)
+
+    -   Processor: Intel Xeon(R) CPU E5 2670 \@ 2.60GHz
+    -   Memory: 96 GB RAM
+
+-   Python code was written using [Conda environments](https://docs.conda.io/en/latest/)
+
+    -   Notable libraries used:
+        -   [Open3D](https://www.open3d.org/)
+        -   [PDAL (Point Data Abstraction Library)](https://pdal.io/en/2.9.2/)
+        -   [NumPy](https://numpy.org/)
+        -   [Pandas](https://pandas.pydata.org/)
+        -   [Scikit-Learn](https://scikit-learn.org/stable/)
+        -   [Multiprocessing](https://docs.python.org/3/library/multiprocessing.html)
+
+-   Reproducible code can be found on my [github page](https://github.com/fibo11235/TrumanDS/tree/master/Capstone)
+
+## References
