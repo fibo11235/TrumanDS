@@ -1,13 +1,13 @@
 ,precision,recall,f1-score
-ground,0.99,0.97,0.98
-building,0.99,0.85,0.91
-signage,0.53,0.7,0.6
-bollard,0.02,0.02,0.02
-trash can,0.39,0.44,0.41
-barrier,0.04,0.5,0.07
-pedestrian,0.39,0.22,0.28
-car,0.72,0.91,0.8
-vegetation,0.59,0.83,0.69
-accuracy,0.92,0.92,0.92
-macro avg,0.52,0.6,0.53
-weighted avg,0.96,0.92,0.93
+ground,0.9916,0.9735,0.9824
+building,0.9932,0.846,0.9137
+signage,0.5259,0.6973,0.5996
+bollard,0.0224,0.017,0.0193
+trash can,0.3855,0.4388,0.4104
+barrier,0.0378,0.4984,0.0703
+pedestrian,0.3876,0.2188,0.2797
+car,0.7169,0.9103,0.8021
+vegetation,0.5922,0.8277,0.6904
+accuracy,0.9154,0.9154,0.9154
+macro avg,0.517,0.6031,0.5298
+weighted avg,0.9561,0.9154,0.9318
