@@ -15,10 +15,11 @@ RUN apt-get clean all && \
 		libgeos-dev \
 		libgdal-dev \
 		libudunits2-dev \
-		texlive-latex-base \
-		texlive-latex-extra \
-		texlive-latex-recommended \
-		texlive-fonts-recommended \
+#		texlive-latex-base \
+#		texlive-latex-extra \
+#		texlive-latex-recommended \
+#		texlive-fonts-recommended \
+		texlive-full \
 		libgsl-dev \
 		openjdk-11-jdk \	
 	&& apt-get clean all && \
