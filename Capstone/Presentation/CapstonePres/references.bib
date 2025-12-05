@@ -400,6 +400,302 @@ and quality of the estimation.},
 	month = may,
 	year = {2020},
 	note = {arXiv:1911.11236 [cs]},
-	keywords = {Computer Science - Computer Vision and Pattern Recognition, Computer Science - Machine Learning, Electrical Engineering and Systems Science - Image and Video Processing},
+	keywords = {Computer Science - Machine Learning, Computer Science - Computer Vision and Pattern Recognition, Electrical Engineering and Systems Science - Image and Video Processing},
 	file = {Snapshot:/home/sspiegel/Zotero/storage/BW6FQWIJ/1911.html:text/html},
+}
+
+@article{sarker_comprehensive_2024,
+	title = {A comprehensive overview of deep learning techniques for {3D} point cloud classification and semantic segmentation},
+	volume = {35},
+	issn = {0932-8092, 1432-1769},
+	url = {http://arxiv.org/abs/2405.11903},
+	doi = {10.1007/s00138-024-01543-1},
+	abstract = {Point cloud analysis has a wide range of applications in many areas such as computer vision, robotic manipulation, and autonomous driving. While deep learning has achieved remarkable success on image-based tasks, there are many unique challenges faced by deep neural networks in processing massive, unordered, irregular and noisy 3D points. To stimulate future research, this paper analyzes recent progress in deep learning methods employed for point cloud processing and presents challenges and potential directions to advance this field. It serves as a comprehensive review on two major tasks in 3D point cloud processing-- namely, 3D shape classification and semantic segmentation.},
+	number = {4},
+	urldate = {2025-11-20},
+	journal = {Machine Vision and Applications},
+	author = {Sarker, Sushmita and Sarker, Prithul and Stone, Gunner and Gorman, Ryan and Tavakkoli, Alireza and Bebis, George and Sattarvand, Javad},
+	month = jul,
+	year = {2024},
+	note = {arXiv:2405.11903 [cs]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition},
+	pages = {67},
+	file = {Preprint PDF:/home/sspiegel/Zotero/storage/BKBND2E3/Sarker et al. - 2024 - A comprehensive overview of deep learning techniques for 3D point cloud classification and semantic.pdf:application/pdf;Snapshot:/home/sspiegel/Zotero/storage/8K5JDJ7F/2405.html:text/html},
+}
+
+@inproceedings{wu_3d_2015,
+	title = {{3D} {ShapeNets}: {A} deep representation for volumetric shapes},
+	shorttitle = {{3D} {ShapeNets}},
+	url = {https://ieeexplore.ieee.org/document/7298801},
+	doi = {10.1109/CVPR.2015.7298801},
+	abstract = {3D shape is a crucial but heavily underutilized cue in today's computer vision systems, mostly due to the lack of a good generic shape representation. With the recent availability of inexpensive 2.5D depth sensors (e.g. Microsoft Kinect), it is becoming increasingly important to have a powerful 3D shape representation in the loop. Apart from category recognition, recovering full 3D shapes from view-based 2.5D depth maps is also a critical part of visual understanding. To this end, we propose to represent a geometric 3D shape as a probability distribution of binary variables on a 3D voxel grid, using a Convolutional Deep Belief Network. Our model, 3D ShapeNets, learns the distribution of complex 3D shapes across different object categories and arbitrary poses from raw CAD data, and discovers hierarchical compositional part representation automatically. It naturally supports joint object recognition and shape completion from 2.5D depth maps, and it enables active object recognition through view planning. To train our 3D deep learning model, we construct ModelNet - a large-scale 3D CAD model dataset. Extensive experiments show that our 3D deep representation enables significant performance improvement over the-state-of-the-arts in a variety of tasks.},
+	urldate = {2025-11-20},
+	booktitle = {2015 {IEEE} {Conference} on {Computer} {Vision} and {Pattern} {Recognition} ({CVPR})},
+	author = {Wu, Zhirong and Song, Shuran and Khosla, Aditya and Yu, Fisher and Zhang, Linguang and Tang, Xiaoou and Xiao, Jianxiong},
+	month = jun,
+	year = {2015},
+	note = {ISSN: 1063-6919},
+	keywords = {Three-dimensional displays, Computational modeling, Convolution, Object recognition, Planning, Shape, Solid modeling},
+	pages = {1912--1920},
+	file = {Snapshot:/home/sspiegel/Zotero/storage/UIPBC7FA/7298801.html:text/html;Submitted Version:/home/sspiegel/Zotero/storage/XKF6JDCW/Wu et al. - 2015 - 3D ShapeNets A deep representation for volumetric shapes.pdf:application/pdf},
+}
+
+@misc{cicek_3d_2016,
+	title = {{3D} {U}-{Net}: {Learning} {Dense} {Volumetric} {Segmentation} from {Sparse} {Annotation}},
+	shorttitle = {{3D} {U}-{Net}},
+	url = {http://arxiv.org/abs/1606.06650},
+	doi = {10.48550/arXiv.1606.06650},
+	abstract = {This paper introduces a network for volumetric segmentation that learns from sparsely annotated volumetric images. We outline two attractive use cases of this method: (1) In a semi-automated setup, the user annotates some slices in the volume to be segmented. The network learns from these sparse annotations and provides a dense 3D segmentation. (2) In a fully-automated setup, we assume that a representative, sparsely annotated training set exists. Trained on this data set, the network densely segments new volumetric images. The proposed network extends the previous u-net architecture from Ronneberger et al. by replacing all 2D operations with their 3D counterparts. The implementation performs on-the-fly elastic deformations for efficient data augmentation during training. It is trained end-to-end from scratch, i.e., no pre-trained network is required. We test the performance of the proposed method on a complex, highly variable 3D structure, the Xenopus kidney, and achieve good results for both use cases.},
+	urldate = {2025-11-26},
+	publisher = {arXiv},
+	author = {Çiçek, Özgün and Abdulkadir, Ahmed and Lienkamp, Soeren S. and Brox, Thomas and Ronneberger, Olaf},
+	month = jun,
+	year = {2016},
+	note = {arXiv:1606.06650 [cs]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition},
+	file = {Full Text PDF:/home/sspiegel/Zotero/storage/7UP6G73S/Çiçek et al. - 2016 - 3D U-Net Learning Dense Volumetric Segmentation from Sparse Annotation.pdf:application/pdf;Snapshot:/home/sspiegel/Zotero/storage/DFHIB6JD/1606.html:text/html},
+}
+
+@misc{ronneberger_u-net_2015,
+	title = {U-{Net}: {Convolutional} {Networks} for {Biomedical} {Image} {Segmentation}},
+	shorttitle = {U-{Net}},
+	url = {http://arxiv.org/abs/1505.04597},
+	doi = {10.48550/arXiv.1505.04597},
+	abstract = {There is large consent that successful training of deep networks requires many thousand annotated training samples. In this paper, we present a network and training strategy that relies on the strong use of data augmentation to use the available annotated samples more efficiently. The architecture consists of a contracting path to capture context and a symmetric expanding path that enables precise localization. We show that such a network can be trained end-to-end from very few images and outperforms the prior best method (a sliding-window convolutional network) on the ISBI challenge for segmentation of neuronal structures in electron microscopic stacks. Using the same network trained on transmitted light microscopy images (phase contrast and DIC) we won the ISBI cell tracking challenge 2015 in these categories by a large margin. Moreover, the network is fast. Segmentation of a 512x512 image takes less than a second on a recent GPU. The full implementation (based on Caffe) and the trained networks are available at http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net .},
+	urldate = {2025-11-26},
+	publisher = {arXiv},
+	author = {Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
+	month = may,
+	year = {2015},
+	note = {arXiv:1505.04597 [cs]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition},
+	file = {Preprint PDF:/home/sspiegel/Zotero/storage/WGY3CVLL/Ronneberger et al. - 2015 - U-Net Convolutional Networks for Biomedical Image Segmentation.pdf:application/pdf;Snapshot:/home/sspiegel/Zotero/storage/WT3S6B3Q/1505.html:text/html},
+}
+
+@misc{noauthor_150504597_nodate,
+	title = {[1505.04597] {U}-{Net}: {Convolutional} {Networks} for {Biomedical} {Image} {Segmentation}},
+	url = {https://arxiv.org/abs/1505.04597},
+	urldate = {2025-11-26},
+	file = {[1505.04597] U-Net\: Convolutional Networks for Biomedical Image Segmentation:/home/sspiegel/Zotero/storage/RJH9C4C6/1505.html:text/html},
+}
+
+@misc{ronneberger_u-net_2015-1,
+	title = {U-{Net}: {Convolutional} {Networks} for {Biomedical} {Image} {Segmentation}},
+	shorttitle = {U-{Net}},
+	url = {http://arxiv.org/abs/1505.04597},
+	doi = {10.48550/arXiv.1505.04597},
+	abstract = {There is large consent that successful training of deep networks requires many thousand annotated training samples. In this paper, we present a network and training strategy that relies on the strong use of data augmentation to use the available annotated samples more efficiently. The architecture consists of a contracting path to capture context and a symmetric expanding path that enables precise localization. We show that such a network can be trained end-to-end from very few images and outperforms the prior best method (a sliding-window convolutional network) on the ISBI challenge for segmentation of neuronal structures in electron microscopic stacks. Using the same network trained on transmitted light microscopy images (phase contrast and DIC) we won the ISBI cell tracking challenge 2015 in these categories by a large margin. Moreover, the network is fast. Segmentation of a 512x512 image takes less than a second on a recent GPU. The full implementation (based on Caffe) and the trained networks are available at http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net .},
+	urldate = {2025-11-26},
+	publisher = {arXiv},
+	author = {Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
+	month = may,
+	year = {2015},
+	note = {arXiv:1505.04597 [cs]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition},
+	file = {Full Text PDF:/home/sspiegel/Zotero/storage/59DDITRY/Ronneberger et al. - 2015 - U-Net Convolutional Networks for Biomedical Image Segmentation.pdf:application/pdf;Snapshot:/home/sspiegel/Zotero/storage/VMAD2QDW/1505.html:text/html},
+}
+
+@article{rusu_semantic_2010-2,
+	title = {Semantic {3D} {Object} {Maps} for {Everyday} {Manipulation} in {Human} {Living} {Environments}},
+	volume = {24},
+	copyright = {http://www.springer.com/tdm},
+	issn = {0933-1875, 1610-1987},
+	url = {http://link.springer.com/10.1007/s13218-010-0059-6},
+	doi = {10.1007/s13218-010-0059-6},
+	language = {en},
+	number = {4},
+	urldate = {2025-11-26},
+	journal = {KI - Künstliche Intelligenz},
+	author = {Rusu, Radu Bogdan},
+	month = nov,
+	year = {2010},
+	pages = {345--348},
+	file = {PDF:/home/sspiegel/Zotero/storage/MY5LM7VG/Rusu - 2010 - Semantic 3D Object Maps for Everyday Manipulation in Human Living Environments.pdf:application/pdf},
+}
+
+@article{hackel_fast_2016,
+	title = {{FAST} {SEMANTIC} {SEGMENTATION} {OF} {3D} {POINT} {CLOUDS} {WITH} {STRONGLY} {VARYING} {DENSITY}},
+	volume = {III-3},
+	url = {https://isprs-annals.copernicus.org/articles/III-3/177/2016/},
+	doi = {10.5194/isprs-annals-III-3-177-2016},
+	journal = {ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
+	author = {Hackel, T. and Wegner, J. D. and Schindler, K.},
+	year = {2016},
+	pages = {177--184},
+}
+
+@article{demantke_dimensionality_2011,
+	title = {{DIMENSIONALITY} {BASED} {SCALE} {SELECTION} {IN} {3D} {LIDAR} {POINT} {CLOUDS}},
+	volume = {XXXVIII-5/W12},
+	url = {https://isprs-archives.copernicus.org/articles/XXXVIII-5-W12/97/2011/},
+	doi = {10.5194/isprsarchives-XXXVIII-5-W12-97-2011},
+	journal = {The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
+	author = {Demantké, J. and Mallet, C. and David, N. and Vallet, B.},
+	year = {2011},
+	pages = {97--102},
+}
+
+@misc{zhou_open3d_2018,
+	title = {{Open3D}: {A} {Modern} {Library} for {3D} {Data} {Processing}},
+	shorttitle = {{Open3D}},
+	url = {http://arxiv.org/abs/1801.09847},
+	doi = {10.48550/arXiv.1801.09847},
+	abstract = {Open3D is an open-source library that supports rapid development of software that deals with 3D data. The Open3D frontend exposes a set of carefully selected data structures and algorithms in both C++ and Python. The backend is highly optimized and is set up for parallelization. Open3D was developed from a clean slate with a small and carefully considered set of dependencies. It can be set up on different platforms and compiled from source with minimal effort. The code is clean, consistently styled, and maintained via a clear code review mechanism. Open3D has been used in a number of published research projects and is actively deployed in the cloud. We welcome contributions from the open-source community.},
+	urldate = {2025-11-27},
+	publisher = {arXiv},
+	author = {Zhou, Qian-Yi and Park, Jaesik and Koltun, Vladlen},
+	month = jan,
+	year = {2018},
+	note = {arXiv:1801.09847 [cs]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition, Computer Science - Graphics, Computer Science - Robotics},
+	file = {Preprint PDF:/home/sspiegel/Zotero/storage/VRM8V95Z/Zhou et al. - 2018 - Open3D A Modern Library for 3D Data Processing.pdf:application/pdf;Snapshot:/home/sspiegel/Zotero/storage/SJA9AD9N/1801.html:text/html},
+}
+
+@misc{noauthor_welcome_2025,
+	title = {Welcome to {Python}.org},
+	url = {https://www.python.org/},
+	abstract = {The official home of the Python Programming Language},
+	language = {en},
+	urldate = {2025-11-27},
+	journal = {Python.org},
+	month = nov,
+	year = {2025},
+	file = {Snapshot:/home/sspiegel/Zotero/storage/DQ4VI9SE/www.python.org.html:text/html},
+}
+
+@article{pedregosa_scikit-learn_2011,
+	title = {Scikit-learn: {Machine} {Learning} in {Python}},
+	volume = {12},
+	url = {http://jmlr.org/papers/v12/pedregosa11a.html},
+	number = {85},
+	journal = {Journal of Machine Learning Research},
+	author = {Pedregosa, Fabian and Varoquaux, Gaël and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and Vanderplas, Jake and Passos, Alexandre and Cournapeau, David and Brucher, Matthieu and Perrot, Matthieu and Duchesnay, Édouard},
+	year = {2011},
+	pages = {2825--2830},
+}
+
+@inproceedings{mckinney_data_2010,
+	address = {Austin, Texas},
+	title = {Data {Structures} for {Statistical} {Computing} in {Python}},
+	url = {https://doi.curvenote.com/10.25080/Majora-92bf1922-00a},
+	doi = {10.25080/Majora-92bf1922-00a},
+	abstract = {In this paper we are concerned with the practical issues of working with data sets common to ﬁnance, statistics, and other related ﬁelds. pandas is a new library which aims to facilitate working with these data sets and to provide a set of fundamental building blocks for implementing statistical models. We will discuss speciﬁc design issues encountered in the course of developing pandas with relevant examples and some comparisons with the R language. We conclude by discussing possible future directions for statistical computing and data analysis using Python.},
+	language = {en},
+	urldate = {2025-11-27},
+	author = {McKinney, Wes},
+	year = {2010},
+	pages = {56--61},
+	file = {PDF:/home/sspiegel/Zotero/storage/AEKL2692/McKinney - 2010 - Data Structures for Statistical Computing in Python.pdf:application/pdf},
+}
+
+@article{harris_array_2020,
+	title = {Array programming with {NumPy}},
+	volume = {585},
+	copyright = {2020 The Author(s)},
+	issn = {1476-4687},
+	url = {https://www.nature.com/articles/s41586-020-2649-2},
+	doi = {10.1038/s41586-020-2649-2},
+	abstract = {Array programming provides a powerful, compact and expressive syntax for accessing, manipulating and operating on data in vectors, matrices and higher-dimensional arrays. NumPy is the primary array programming library for the Python language. It has an essential role in research analysis pipelines in fields as diverse as physics, chemistry, astronomy, geoscience, biology, psychology, materials science, engineering, finance and economics. For example, in astronomy, NumPy was an important part of the software stack used in the discovery of gravitational waves1 and in the first imaging of a black hole2. Here we review how a few fundamental array concepts lead to a simple and powerful programming paradigm for organizing, exploring and analysing scientific data. NumPy is the foundation upon which the scientific Python ecosystem is constructed. It is so pervasive that several projects, targeting audiences with specialized needs, have developed their own NumPy-like interfaces and array objects. Owing to its central position in the ecosystem, NumPy increasingly acts as an interoperability layer between such array computation libraries and, together with its application programming interface (API), provides a flexible framework to support the next decade of scientific and industrial analysis.},
+	language = {en},
+	number = {7825},
+	urldate = {2025-11-27},
+	journal = {Nature},
+	author = {Harris, Charles R. and Millman, K. Jarrod and van der Walt, Stéfan J. and Gommers, Ralf and Virtanen, Pauli and Cournapeau, David and Wieser, Eric and Taylor, Julian and Berg, Sebastian and Smith, Nathaniel J. and Kern, Robert and Picus, Matti and Hoyer, Stephan and van Kerkwijk, Marten H. and Brett, Matthew and Haldane, Allan and del Río, Jaime Fernández and Wiebe, Mark and Peterson, Pearu and Gérard-Marchant, Pierre and Sheppard, Kevin and Reddy, Tyler and Weckesser, Warren and Abbasi, Hameer and Gohlke, Christoph and Oliphant, Travis E.},
+	month = sep,
+	year = {2020},
+	note = {Publisher: Nature Publishing Group},
+	keywords = {Computational neuroscience, Computational science, Computer science, Software, Solar physics},
+	pages = {357--362},
+	file = {Full Text PDF:/home/sspiegel/Zotero/storage/VCW2BJCE/Harris et al. - 2020 - Array programming with NumPy.pdf:application/pdf},
+}
+
+@misc{butler_pdalpdal_2024,
+	title = {{PDAL}/{PDAL}: 2.7.1},
+	shorttitle = {{PDAL}/{PDAL}},
+	url = {https://zenodo.org/records/10884408},
+	abstract = {Bug Fixes
+
+
+
+Add more logging to readers.stac \#4353
+
+Don't break strict aliasing rules \#4361
+
+Don't do readers.las ready() processing if there are no points \#4363
+
+readers.arrow and writers.arrow do not require GDAL CMake dependency \#4365
+
+Add writers.tiledb duplicate points config \#4370
+
+use CONFIG CMake find\_package for filters.arrow and readers.draco/writers.draco \#4369
+
+Don't attempt tree isolation for isolated point in filters.litree \#4373
+
+
+Changelog since 2.7.0: https://github.com/PDAL/PDAL/compare/2.7.0...2.7.1
+
+Changelog between 2.7.0 and 2.7.1: https://github.com/PDAL/PDAL/compare/2.7.1...2.7-maintenance},
+	urldate = {2025-11-27},
+	publisher = {Zenodo},
+	author = {Butler, Howard and Bell, Andrew and Gerlek, Michael P. and chambbj and Gadomski, Pete and Manning, Connor and Łoskot, Mateusz and Couwenberg, Bas and Barker, Norman and Ramsey, Paul and Dark, Julia and Chaulet, Nicolas and Rouault, Even and Mann, Kyle and Foster, Claire and Villemin, Guilhem and Rosen, Michael and Grigory and Moore, Ogi and Lewis, Scott and McKelvey, Kirk and Brookes, Daniel and Evers, Kristian and Dobias, Martin and Coup, Robert and Vergara, Vicky and xantares and Bram and Yonas, Aaron},
+	month = mar,
+	year = {2024},
+	doi = {10.5281/zenodo.10884408},
+	file = {Snapshot:/home/sspiegel/Zotero/storage/LMAQLTCP/10884408.html:text/html},
+}
+
+@misc{girardeau-montaut_cloudcompare_nodate,
+	title = {{CloudCompare}},
+	author = {Girardeau-Montaut, Daniel},
+}
+
+@article{zhang_deep_2023,
+	title = {Deep {Learning}-based {3D} {Point} {Cloud} {Classification}: {A} {Systematic} {Survey} and {Outlook}},
+	volume = {79},
+	issn = {01419382},
+	shorttitle = {Deep {Learning}-based {3D} {Point} {Cloud} {Classification}},
+	url = {http://arxiv.org/abs/2311.02608},
+	doi = {10.1016/j.displa.2023.102456},
+	abstract = {In recent years, point cloud representation has become one of the research hotspots in the field of computer vision, and has been widely used in many fields, such as autonomous driving, virtual reality, robotics, etc. Although deep learning techniques have achieved great success in processing regular structured 2D grid image data, there are still great challenges in processing irregular, unstructured point cloud data. Point cloud classification is the basis of point cloud analysis, and many deep learning-based methods have been widely used in this task. Therefore, the purpose of this paper is to provide researchers in this field with the latest research progress and future trends. First, we introduce point cloud acquisition, characteristics, and challenges. Second, we review 3D data representations, storage formats, and commonly used datasets for point cloud classification. We then summarize deep learning-based methods for point cloud classification and complement recent research work. Next, we compare and analyze the performance of the main methods. Finally, we discuss some challenges and future directions for point cloud classification.},
+	urldate = {2025-12-03},
+	journal = {Displays},
+	author = {Zhang, Huang and Wang, Changshuo and Tian, Shengwei and Lu, Baoli and Zhang, Liping and Ning, Xin and Bai, Xiao},
+	month = sep,
+	year = {2023},
+	note = {arXiv:2311.02608 [cs]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition},
+	pages = {102456},
+	file = {Preprint PDF:/home/sspiegel/Zotero/storage/H5W6BJ3I/Zhang et al. - 2023 - Deep Learning-based 3D Point Cloud Classification A Systematic Survey and Outlook.pdf:application/pdf;Snapshot:/home/sspiegel/Zotero/storage/RQ7T94JF/2311.html:text/html},
+}
+
+@misc{qi_pointnet_2017,
+	title = {{PointNet}: {Deep} {Learning} on {Point} {Sets} for {3D} {Classification} and {Segmentation}},
+	shorttitle = {{PointNet}},
+	url = {http://arxiv.org/abs/1612.00593},
+	doi = {10.48550/arXiv.1612.00593},
+	abstract = {Point cloud is an important type of geometric data structure. Due to its irregular format, most researchers transform such data to regular 3D voxel grids or collections of images. This, however, renders data unnecessarily voluminous and causes issues. In this paper, we design a novel type of neural network that directly consumes point clouds and well respects the permutation invariance of points in the input. Our network, named PointNet, provides a unified architecture for applications ranging from object classification, part segmentation, to scene semantic parsing. Though simple, PointNet is highly efficient and effective. Empirically, it shows strong performance on par or even better than state of the art. Theoretically, we provide analysis towards understanding of what the network has learnt and why the network is robust with respect to input perturbation and corruption.},
+	urldate = {2025-12-05},
+	publisher = {arXiv},
+	author = {Qi, Charles R. and Su, Hao and Mo, Kaichun and Guibas, Leonidas J.},
+	month = apr,
+	year = {2017},
+	note = {arXiv:1612.00593 [cs]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition},
+	file = {Preprint PDF:/home/sspiegel/Zotero/storage/JINI4RVC/Qi et al. - 2017 - PointNet Deep Learning on Point Sets for 3D Classification and Segmentation.pdf:application/pdf;Snapshot:/home/sspiegel/Zotero/storage/LXA5FYJR/1612.html:text/html},
+}
+
+@misc{yu_point-bert_2022,
+	title = {Point-{BERT}: {Pre}-training {3D} {Point} {Cloud} {Transformers} with {Masked} {Point} {Modeling}},
+	shorttitle = {Point-{BERT}},
+	url = {http://arxiv.org/abs/2111.14819},
+	doi = {10.48550/arXiv.2111.14819},
+	abstract = {We present Point-BERT, a new paradigm for learning Transformers to generalize the concept of BERT to 3D point cloud. Inspired by BERT, we devise a Masked Point Modeling (MPM) task to pre-train point cloud Transformers. Specifically, we first divide a point cloud into several local point patches, and a point cloud Tokenizer with a discrete Variational AutoEncoder (dVAE) is designed to generate discrete point tokens containing meaningful local information. Then, we randomly mask out some patches of input point clouds and feed them into the backbone Transformers. The pre-training objective is to recover the original point tokens at the masked locations under the supervision of point tokens obtained by the Tokenizer. Extensive experiments demonstrate that the proposed BERT-style pre-training strategy significantly improves the performance of standard point cloud Transformers. Equipped with our pre-training strategy, we show that a pure Transformer architecture attains 93.8\% accuracy on ModelNet40 and 83.1\% accuracy on the hardest setting of ScanObjectNN, surpassing carefully designed point cloud models with much fewer hand-made designs. We also demonstrate that the representations learned by Point-BERT transfer well to new tasks and domains, where our models largely advance the state-of-the-art of few-shot point cloud classification task. The code and pre-trained models are available at https://github.com/lulutang0608/Point-BERT},
+	urldate = {2025-12-05},
+	publisher = {arXiv},
+	author = {Yu, Xumin and Tang, Lulu and Rao, Yongming and Huang, Tiejun and Zhou, Jie and Lu, Jiwen},
+	month = jun,
+	year = {2022},
+	note = {arXiv:2111.14819 [cs]},
+	keywords = {Computer Science - Artificial Intelligence, Computer Science - Computer Vision and Pattern Recognition, Computer Science - Machine Learning},
+	file = {Full Text PDF:/home/sspiegel/Zotero/storage/GWIRADGA/Yu et al. - 2022 - Point-BERT Pre-training 3D Point Cloud Transformers with Masked Point Modeling.pdf:application/pdf;Snapshot:/home/sspiegel/Zotero/storage/E7HXCLPK/2111.html:text/html},
 }

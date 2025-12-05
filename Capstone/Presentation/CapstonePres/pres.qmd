@@ -53,7 +53,7 @@ bibliography: references.bib
 Benchmark LiDAR point cloud dataset of Lille, France
 :::
 
-## Problem Statement
+## Problem Statement {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 -   We desire to accurately segment point cloud, $C$ using a trained classifier using a multiscaled neighborhood approach similar to the method found in [@thomas_semantic_2018] and [@mohamed_evaluation_2021].
 
@@ -73,7 +73,7 @@ $$
 
 where $D$ is some distance metric.
 
-## Point Features
+## Point Features {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 -   Point clouds are fundamentally different to other imagery types.
     -   Typical imagery data consists of a well-structured 2 dimensional grid with RGB color channels.
@@ -82,11 +82,11 @@ where $D$ is some distance metric.
     -   rotations
     -   permutations
     -   translations
--   Instead of using the coordinates themselves, we derive point features by taking the local neighborhood of a point, $p$.
+-   Instead of using the coordinates themselves, we derive point features by taking the local neighborhood of a point.  
 
-## Neighborhood definitions in study
+## Neighborhood definitions in study {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
--   A radial neighborhood $N$ of a point $p_{0} \in C$ is defined as
+-   A spherical (radial) neighborhood $N$ of a point $p_{0} \in C$ is defined as
 
 $$
   N(p_{0}) = \left\{p \mid \Vert p - p_{0} \Vert \leq r \right\}
@@ -106,7 +106,7 @@ $$ where $r^{(cyl)}$, $h$ is the radius and length of the cylinder, respectively
 
 -   This assumes the center line can be parameterized by the unit vector, $e_z = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$
 
-## Cylinderical vs Radial neighborhoods
+## Cylinderical vs Radial neighborhoods {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 ::: {#fig-pc layout-ncol="2"}
 ![Spherical](radial_random.png){#fig-rad}
@@ -116,7 +116,7 @@ $$ where $r^{(cyl)}$, $h$ is the radius and length of the cylinder, respectively
 Example of neighborhood types
 :::
 
-## Point Features
+## Point Features {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 -   Given a point $p_{0}$, we compute the covariance matrix from a neighborhood, $N$ to determine characteristic geometric features of $p_0$ with its neighbors as described in [@rusu_semantic_2010].
 
@@ -128,7 +128,9 @@ $$ - This is a $3x3$ symmetric matrix and hence has 3 real-valued eigenvalues ($
 
 -   From these eigenvalues and vectors we can compute pointwise features
 
-## Point Features continued
+-  To capture additional geometric context we use 6 radii with 12 features (72 features per point)
+
+## Point Features continued {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 |    Feature    |                  Equation                   |
 |:-------------:|:-------------------------------------------:|
@@ -141,15 +143,17 @@ $$ - This is a $3x3$ symmetric matrix and hence has 3 real-valued eigenvalues ($
 |   Curvature   | $\frac{\lambda_3} {\sum_{1}^3 \lambda_{i}}$ |
 | Verticality 1 | $|\frac{\pi}{2} - cos^{-1}(v_1\cdot e_z)|$  |
 | Verticality 2 | $|\frac{\pi}{2} - cos^{-1}(v_3\cdot e_z)|$  |
+| Height Variance | $\frac{1}{N}\sum_{i} (H_{i} - \bar{H})^{2}$              |
+| Height Range | $H_{\text{max}} - H_{\text{min}}$              |
 |  Point Count  |                    $|N|$                    |
 
-## Multi Scaled approach
+## Multi Scaled approach {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 -   The difficulty in using point features is finding the correct neighborhood size to accurately describe point features.
 
 -   We use various neighborhood sizes and use each computed point feature as a feature for point $p_{0}$.
 
-### Radial
+### Radial {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 -   For radial neighborhoods, the size of the radius is increased incrementally while the neighborhood points are proportionally downsampled for computational stability.
 
@@ -167,7 +171,7 @@ $$
   g_i = \frac{r_i}{\rho}
 $$ where $\rho$ is a predetermined factor.
 
-### Cylindrical
+### Cylindrical {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 -   We use a cylinder that can be defined by the radial neighborhood method.
     -   This is done by fitting the cylinder within the sphere defined by radius $r_i$.
@@ -179,7 +183,7 @@ $$
   h^{(\text{cyl})} = \frac{2r_i}{\sqrt{2}}
 $$ - This allows us to define the cylinder in terms of the sphere.
 
-## Classifier
+## Classifier {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 -   We randomly sample a balanced amount per class and apply a random forest classifier.
 
@@ -191,40 +195,97 @@ $$ - This allows us to define the cylinder in terms of the sphere.
 
 <!-- ![Single tree of RF classifier](rf_singleTree.png){fig-rf="Picture of a single tree in a random forest classifier"} -->
 
-## Results - Radial
+## Results - Radial {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 ### Precision/Recall
 
-|              | precision | recall | f1-score |
-|:-------------|----------:|-------:|---------:|
-| ground       |      0.99 |   0.98 |     0.98 |
-| building     |      0.99 |   0.83 |     0.91 |
-| signage      |      0.49 |   0.67 |     0.57 |
-| bollard      |      0.13 |   0.09 |     0.11 |
-| trash can    |      0.43 |    0.5 |     0.46 |
-| barrier      |      0.03 |   0.44 |     0.05 |
-| pedestrian   |       0.2 |   0.11 |     0.14 |
-| car          |       0.8 |   0.92 |     0.86 |
-| vegetation   |      0.61 |   0.82 |      0.7 |
-| accuracy     |      0.91 |   0.91 |     0.91 |
-| macro avg    |      0.52 |    0.6 |     0.53 |
-| weighted avg |      0.96 |   0.91 |     0.93 |
+| Label        |   precision |   recall |   f1-score |
+|:-------------|------------:|---------:|-----------:|
+| ground       |      0.9907 |   0.9821 |     0.9864 |
+| building     |      0.992  |   0.8373 |     0.9081 |
+| signage      |      0.5174 |   0.6918 |     0.592  |
+| bollard      |      0.113  |   0.0929 |     0.102  |
+| trash can    |      0.4481 |   0.4819 |     0.4644 |
+| barrier      |      0.0319 |   0.4958 |     0.0599 |
+| pedestrian   |      0.2317 |   0.1365 |     0.1718 |
+| car          |      0.8119 |   0.9054 |     0.8561 |
+| vegetation   |      0.6237 |   0.8277 |     0.7114 |
+| accuracy     |      0.9173 |   0.9173 |     0.9173 |
+| macro avg    |      0.5289 |   0.6057 |     0.5391 |
+| weighted avg |      0.9602 |   0.9173 |     0.9352 |
+
+
+
 
 ### Confustion Matrix
 
-|            | ground | building | signage | bollard | trash can | barrier | pedestrian |  car | vegetation |
-|:-----------|-------:|---------:|--------:|--------:|----------:|--------:|-----------:|-----:|-----------:|
-| ground     |   0.98 |        0 |       0 |       0 |         0 |       0 |          0 | 0.01 |       0.01 |
-| building   |   0.01 |     0.83 |       0 |       0 |         0 |     0.1 |          0 |    0 |       0.04 |
-| signage    |      0 |     0.25 |    0.67 |       0 |      0.01 |    0.02 |          0 |    0 |       0.06 |
-| bollard    |   0.17 |        0 |    0.69 |    0.09 |      0.01 |       0 |          0 |    0 |       0.03 |
-| trash can  |   0.05 |        0 |    0.04 |    0.01 |       0.5 |    0.13 |       0.02 | 0.13 |       0.12 |
-| barrier    |      0 |     0.08 |    0.12 |       0 |      0.02 |    0.44 |          0 | 0.03 |        0.3 |
-| pedestrian |      0 |        0 |    0.13 |       0 |      0.02 |    0.08 |       0.11 | 0.09 |       0.57 |
-| car        |      0 |        0 |       0 |       0 |      0.01 |    0.02 |          0 | 0.92 |       0.04 |
-| vegetation |   0.07 |     0.01 |    0.02 |       0 |      0.02 |    0.03 |          0 | 0.03 |       0.82 |
+|       |   ground |   building |   signage |   bollard |   trash can |   barrier |   pedestrian |    car |   vegetation |
+|:-----------|---------:|-----------:|----------:|----------:|------------:|----------:|-------------:|-------:|-------------:|
+| ground     |   0.9821 |     0.0011 |    0.0004 |    0.0001 |      0.0017 |    0.0011 |       0.0001 | 0.0076 |       0.0059 |
+| building   |   0.0052 |     0.8373 |    0.0042 |    0      |      0.0032 |    0.1028 |       0.0002 | 0.0046 |       0.0425 |
+| signage    |   0.0002 |     0.242  |    0.6918 |    0      |      0.0026 |    0.0113 |       0.0002 | 0.0001 |       0.0519 |
+| bollard    |   0.1573 |     0.0021 |    0.6605 |    0.0929 |      0.0025 |    0.0367 |       0.0011 | 0.0129 |       0.0341 |
+| trash can  |   0.0477 |     0.0029 |    0.0326 |    0.0252 |      0.4819 |    0.1529 |       0.0189 | 0.0906 |       0.1472 |
+| barrier    |   0.0008 |     0.0384 |    0.1352 |    0      |      0.015  |    0.4958 |       0.0001 | 0.0179 |       0.2968 |
+| pedestrian |   0.0012 |     0.0014 |    0.1137 |    0      |      0.0139 |    0.1151 |       0.1365 | 0.0616 |       0.5567 |
+| car        |   0.0041 |     0.0006 |    0.0005 |    0      |      0.0071 |    0.0359 |       0.0003 | 0.9054 |       0.046  |
+| vegetation |   0.0695 |     0.0067 |    0.0197 |    0.0011 |      0.0204 |    0.027  |       0.0004 | 0.0276 |       0.8277 |
 
-## Future Work
+
+
+## Spherical Neighborhood results {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
+
+
+![Point cloud image of Lille, France](predictedPoints.png){fig-alt="Spherical Results"}
+
+
+## Results - Cylindrical {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
+
+### Precision/Recall
+
+| Label        |   precision |   recall |   f1-score |
+|:-------------|------------:|---------:|-----------:|
+| ground       |      0.9916 |   0.9735 |     0.9824 |
+| building     |      0.9932 |   0.846  |     0.9137 |
+| signage      |      0.5259 |   0.6973 |     0.5996 |
+| bollard      |      0.0224 |   0.017  |     0.0193 |
+| trash can    |      0.3855 |   0.4388 |     0.4104 |
+| barrier      |      0.0378 |   0.4984 |     0.0703 |
+| pedestrian   |      0.3876 |   0.2188 |     0.2797 |
+| car          |      0.7169 |   0.9103 |     0.8021 |
+| vegetation   |      0.5922 |   0.8277 |     0.6904 |
+| accuracy     |      0.9154 |   0.9154 |     0.9154 |
+| macro avg    |      0.517  |   0.6031 |     0.5298 |
+| weighted avg |      0.9561 |   0.9154 |     0.9318 |
+
+
+
+### Confustion Matrix
+
+|       |   ground |   building |   signage |   bollard |   trash can |   barrier |   pedestrian |    car |   vegetation |
+|:-----------|---------:|-----------:|----------:|----------:|------------:|----------:|-------------:|-------:|-------------:|
+| ground     |   0.9735 |     0.001  |    0.0005 |    0.0001 |      0.0015 |    0.0008 |       0      | 0.0166 |       0.006  |
+| building   |   0.0037 |     0.846  |    0.0043 |    0      |      0.0049 |    0.0876 |       0.0001 | 0.0037 |       0.0497 |
+| signage    |   0.0002 |     0.2131 |    0.6973 |    0      |      0.0016 |    0.0233 |       0.0003 | 0.0008 |       0.0634 |
+| bollard    |   0.13   |     0.0051 |    0.7643 |    0.017  |      0.0251 |    0.0037 |       0      | 0.0075 |       0.0473 |
+| trash can  |   0.0715 |     0.0041 |    0.0469 |    0.0337 |      0.4388 |    0.1162 |       0.0188 | 0.0896 |       0.1805 |
+| barrier    |   0.0008 |     0.0202 |    0.0756 |    0      |      0.0061 |    0.4984 |       0.0002 | 0.0252 |       0.3734 |
+| pedestrian |   0.0005 |     0.002  |    0.0261 |    0      |      0.0125 |    0.0844 |       0.2188 | 0.2369 |       0.4189 |
+| car        |   0.0075 |     0.0002 |    0.0005 |    0      |      0.0021 |    0.0274 |       0.0004 | 0.9103 |       0.0517 |
+| vegetation |   0.0632 |     0.0045 |    0.018  |    0.0008 |      0.0282 |    0.0185 |       0.0002 | 0.0388 |       0.8277 |
+
+
+
+## Cylindrical Neighborhood results {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
+
+
+![Point cloud image of Lille, France](predictedPoints_Cylinder.png){fig-alt="Cylindrical Results"}
+
+
+
+
+
+## Future Work {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 -   This small study analyzed the differences between two different definitions of neighborhoods and how it may affect segmentation of outdoor point clouds.
 
@@ -236,7 +297,7 @@ $$ - This allows us to define the cylinder in terms of the sphere.
 
 -   More modern approaches (pointwise CNNs) will be tested using a cylindrical neighborhood method.
 
-## Code
+## Code {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 -   This presentation was created using [Quarto in R Studio](https://quarto.org/docs/tools/rstudio.html#:~:text=new%20Quarto%20documents:-,Render%20and%20Preview,existing%20Rmd%20document%20without%20changes.). Rstudio was run using a [Docker container](https://www.docker.com/).
 
@@ -257,4 +318,8 @@ $$ - This allows us to define the cylinder in terms of the sphere.
 
 -   Reproducible code can be found on my [github page](https://github.com/fibo11235/TrumanDS/tree/master/Capstone)
 
-## References
+## Questions? {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
+
+## References {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
+
+

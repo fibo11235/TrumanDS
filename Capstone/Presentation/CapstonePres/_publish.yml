@@ -1,4 +1,4 @@
 - source: pres.qmd
   quarto-pub:
     - id: 7bf9e8e9-a293-4084-a46f-fa619bcef271
-      url: https://sss8885.quarto.pub/point-cloud-segmentation-using-multiscaled-neighborhoods
+      url: 'https://sss8885.quarto.pub/point-cloud-segmentation-using-multiscaled-neighborhoods'

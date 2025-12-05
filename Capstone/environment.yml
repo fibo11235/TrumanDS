@@ -385,4 +385,4 @@ dependencies:
       - xyzservices==2025.11.0
       - zict==3.0.0
       - zipp==3.23.0
-prefix: /home/sspiegel/miniconda3/envs/masterEnv
+
