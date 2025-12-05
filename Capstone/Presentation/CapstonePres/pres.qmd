@@ -63,7 +63,7 @@ Benchmark LiDAR point cloud dataset of Lille, France
 
 -   In addition to the approach found in [@thomas_semantic_2018], we will add an additional neighborhood method and compare the results on a mobile LiDAR scan from Lille France [@roynard_paris-lille-3d_2017].
 
--   Later in this study will compare the two methods on an aerial scan of Dayton, Ohio [@singer_dales_2021]
+    ### Point Neighborhoods
 
 -   A neighborhood $N$ of point $p_0$ is defined as
 
@@ -71,7 +71,7 @@ $$
 N(p_0) = \left\{p \mid D(p, p_0) < r \right\}
 $$
 
-where $D$ is some distance metric.
+where $D$ is some distance metric and $r$ is some restraining criteria.
 
 ## Point Features {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
@@ -82,7 +82,7 @@ where $D$ is some distance metric.
     -   rotations
     -   permutations
     -   translations
--   Instead of using the coordinates themselves, we derive point features by taking the local neighborhood of a point.  
+-   Instead of using the coordinates themselves, we derive point features by taking the local neighborhood of a point.
 
 ## Neighborhood definitions in study {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
@@ -128,24 +128,39 @@ $$ - This is a $3x3$ symmetric matrix and hence has 3 real-valued eigenvalues ($
 
 -   From these eigenvalues and vectors we can compute pointwise features
 
--  To capture additional geometric context we use 6 radii with 12 features (72 features per point)
+-   To capture additional geometric context we use 6 radii with 12 features (72 features per point)
 
 ## Point Features continued {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
-|    Feature    |                  Equation                   |
-|:-------------:|:-------------------------------------------:|
-|   Eigen sum   |           $\sum_{i}^3 \lambda_i$            |
-| Omnivariance  |   $(\prod_{i}^3 \lambda_i)^{\frac{1}{3}}$   |
-|    Entropy    |  $-(\sum_{i}^3 \lambda_{i}log(\lambda_i))$  |
-|   Linearity   | $\frac{\lambda_1 - \lambda_2} {\lambda_1}$  |
-|   Planarity   | $\frac{\lambda_2 - \lambda_3} {\lambda_1}$  |
-|  Sphericity   |       $\frac{\lambda_3} {\lambda_1}$        |
-|   Curvature   | $\frac{\lambda_3} {\sum_{1}^3 \lambda_{i}}$ |
-| Verticality 1 | $|\frac{\pi}{2} - cos^{-1}(v_1\cdot e_z)|$  |
-| Verticality 2 | $|\frac{\pi}{2} - cos^{-1}(v_3\cdot e_z)|$  |
-| Height Variance | $\frac{1}{N}\sum_{i} (H_{i} - \bar{H})^{2}$              |
-| Height Range | $H_{\text{max}} - H_{\text{min}}$              |
-|  Point Count  |                    $|N|$                    |
+|     Feature     |                  Equation                   |
+|:---------------:|:-------------------------------------------:|
+|    Eigen sum    |           $\sum_{i}^3 \lambda_i$            |
+|  Omnivariance   |   $(\prod_{i}^3 \lambda_i)^{\frac{1}{3}}$   |
+|     Entropy     |  $-(\sum_{i}^3 \lambda_{i}log(\lambda_i))$  |
+|    Linearity    | $\frac{\lambda_1 - \lambda_2} {\lambda_1}$  |
+|    Planarity    | $\frac{\lambda_2 - \lambda_3} {\lambda_1}$  |
+|   Sphericity    |       $\frac{\lambda_3} {\lambda_1}$        |
+|    Curvature    | $\frac{\lambda_3} {\sum_{1}^3 \lambda_{i}}$ |
+|  Verticality 1  | $|\frac{\pi}{2} - cos^{-1}(v_1\cdot e_z)|$  |
+|  Verticality 2  | $|\frac{\pi}{2} - cos^{-1}(v_3\cdot e_z)|$  |
+| Height Variance | $\frac{1}{N}\sum_{i} (H_{i} - \bar{H})^{2}$ |
+|  Height Range   |      $H_{\text{max}} - H_{\text{min}}$      |
+|   Point Count   |                    $|N|$                    |
+
+## Visualization of Point Features {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
+
+::: {layout-ncol="2"}
+![Planarity](planarity.png){#fig-planarity}
+
+![Linearity](linearity.png){#fig-linearity}
+
+![Height Variance](HeightVariance.png){#fig-var}
+
+![Sphericity](sphericity.png){#fig-spher} 
+
+Visualization of point features
+:::
+
 
 ## Multi Scaled approach {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
@@ -199,91 +214,75 @@ $$ - This allows us to define the cylinder in terms of the sphere.
 
 ### Precision/Recall
 
-| Label        |   precision |   recall |   f1-score |
-|:-------------|------------:|---------:|-----------:|
-| ground       |      0.9907 |   0.9821 |     0.9864 |
-| building     |      0.992  |   0.8373 |     0.9081 |
-| signage      |      0.5174 |   0.6918 |     0.592  |
-| bollard      |      0.113  |   0.0929 |     0.102  |
-| trash can    |      0.4481 |   0.4819 |     0.4644 |
-| barrier      |      0.0319 |   0.4958 |     0.0599 |
-| pedestrian   |      0.2317 |   0.1365 |     0.1718 |
-| car          |      0.8119 |   0.9054 |     0.8561 |
-| vegetation   |      0.6237 |   0.8277 |     0.7114 |
-| accuracy     |      0.9173 |   0.9173 |     0.9173 |
-| macro avg    |      0.5289 |   0.6057 |     0.5391 |
-| weighted avg |      0.9602 |   0.9173 |     0.9352 |
-
-
-
+| Label        | precision | recall | f1-score |
+|:-------------|----------:|-------:|---------:|
+| ground       |    0.9907 | 0.9821 |   0.9864 |
+| building     |     0.992 | 0.8373 |   0.9081 |
+| signage      |    0.5174 | 0.6918 |    0.592 |
+| bollard      |     0.113 | 0.0929 |    0.102 |
+| trash can    |    0.4481 | 0.4819 |   0.4644 |
+| barrier      |    0.0319 | 0.4958 |   0.0599 |
+| pedestrian   |    0.2317 | 0.1365 |   0.1718 |
+| car          |    0.8119 | 0.9054 |   0.8561 |
+| vegetation   |    0.6237 | 0.8277 |   0.7114 |
+| accuracy     |    0.9173 | 0.9173 |   0.9173 |
+| macro avg    |    0.5289 | 0.6057 |   0.5391 |
+| weighted avg |    0.9602 | 0.9173 |   0.9352 |
 
 ### Confustion Matrix
 
-|       |   ground |   building |   signage |   bollard |   trash can |   barrier |   pedestrian |    car |   vegetation |
-|:-----------|---------:|-----------:|----------:|----------:|------------:|----------:|-------------:|-------:|-------------:|
-| ground     |   0.9821 |     0.0011 |    0.0004 |    0.0001 |      0.0017 |    0.0011 |       0.0001 | 0.0076 |       0.0059 |
-| building   |   0.0052 |     0.8373 |    0.0042 |    0      |      0.0032 |    0.1028 |       0.0002 | 0.0046 |       0.0425 |
-| signage    |   0.0002 |     0.242  |    0.6918 |    0      |      0.0026 |    0.0113 |       0.0002 | 0.0001 |       0.0519 |
-| bollard    |   0.1573 |     0.0021 |    0.6605 |    0.0929 |      0.0025 |    0.0367 |       0.0011 | 0.0129 |       0.0341 |
-| trash can  |   0.0477 |     0.0029 |    0.0326 |    0.0252 |      0.4819 |    0.1529 |       0.0189 | 0.0906 |       0.1472 |
-| barrier    |   0.0008 |     0.0384 |    0.1352 |    0      |      0.015  |    0.4958 |       0.0001 | 0.0179 |       0.2968 |
-| pedestrian |   0.0012 |     0.0014 |    0.1137 |    0      |      0.0139 |    0.1151 |       0.1365 | 0.0616 |       0.5567 |
-| car        |   0.0041 |     0.0006 |    0.0005 |    0      |      0.0071 |    0.0359 |       0.0003 | 0.9054 |       0.046  |
-| vegetation |   0.0695 |     0.0067 |    0.0197 |    0.0011 |      0.0204 |    0.027  |       0.0004 | 0.0276 |       0.8277 |
-
-
+|            | ground | building | signage | bollard | trash can | barrier | pedestrian |    car | vegetation |
+|:-------|-------:|-------:|-------:|-------:|-------:|-------:|-------:|-------:|-------:|
+| ground     | 0.9821 |   0.0011 |  0.0004 |  0.0001 |    0.0017 |  0.0011 |     0.0001 | 0.0076 |     0.0059 |
+| building   | 0.0052 |   0.8373 |  0.0042 |       0 |    0.0032 |  0.1028 |     0.0002 | 0.0046 |     0.0425 |
+| signage    | 0.0002 |    0.242 |  0.6918 |       0 |    0.0026 |  0.0113 |     0.0002 | 0.0001 |     0.0519 |
+| bollard    | 0.1573 |   0.0021 |  0.6605 |  0.0929 |    0.0025 |  0.0367 |     0.0011 | 0.0129 |     0.0341 |
+| trash can  | 0.0477 |   0.0029 |  0.0326 |  0.0252 |    0.4819 |  0.1529 |     0.0189 | 0.0906 |     0.1472 |
+| barrier    | 0.0008 |   0.0384 |  0.1352 |       0 |     0.015 |  0.4958 |     0.0001 | 0.0179 |     0.2968 |
+| pedestrian | 0.0012 |   0.0014 |  0.1137 |       0 |    0.0139 |  0.1151 |     0.1365 | 0.0616 |     0.5567 |
+| car        | 0.0041 |   0.0006 |  0.0005 |       0 |    0.0071 |  0.0359 |     0.0003 | 0.9054 |      0.046 |
+| vegetation | 0.0695 |   0.0067 |  0.0197 |  0.0011 |    0.0204 |   0.027 |     0.0004 | 0.0276 |     0.8277 |
 
 ## Spherical Neighborhood results {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
-
-![Point cloud image of Lille, France](predictedPoints.png){fig-alt="Spherical Results"}
-
+![Predicted Radial Points](predictedPoints.png){fig-alt="Spherical Results"}
 
 ## Results - Cylindrical {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 ### Precision/Recall
 
-| Label        |   precision |   recall |   f1-score |
-|:-------------|------------:|---------:|-----------:|
-| ground       |      0.9916 |   0.9735 |     0.9824 |
-| building     |      0.9932 |   0.846  |     0.9137 |
-| signage      |      0.5259 |   0.6973 |     0.5996 |
-| bollard      |      0.0224 |   0.017  |     0.0193 |
-| trash can    |      0.3855 |   0.4388 |     0.4104 |
-| barrier      |      0.0378 |   0.4984 |     0.0703 |
-| pedestrian   |      0.3876 |   0.2188 |     0.2797 |
-| car          |      0.7169 |   0.9103 |     0.8021 |
-| vegetation   |      0.5922 |   0.8277 |     0.6904 |
-| accuracy     |      0.9154 |   0.9154 |     0.9154 |
-| macro avg    |      0.517  |   0.6031 |     0.5298 |
-| weighted avg |      0.9561 |   0.9154 |     0.9318 |
-
-
+| Label        | precision | recall | f1-score |
+|:-------------|----------:|-------:|---------:|
+| ground       |    0.9916 | 0.9735 |   0.9824 |
+| building     |    0.9932 |  0.846 |   0.9137 |
+| signage      |    0.5259 | 0.6973 |   0.5996 |
+| bollard      |    0.0224 |  0.017 |   0.0193 |
+| trash can    |    0.3855 | 0.4388 |   0.4104 |
+| barrier      |    0.0378 | 0.4984 |   0.0703 |
+| pedestrian   |    0.3876 | 0.2188 |   0.2797 |
+| car          |    0.7169 | 0.9103 |   0.8021 |
+| vegetation   |    0.5922 | 0.8277 |   0.6904 |
+| accuracy     |    0.9154 | 0.9154 |   0.9154 |
+| macro avg    |     0.517 | 0.6031 |   0.5298 |
+| weighted avg |    0.9561 | 0.9154 |   0.9318 |
 
 ### Confustion Matrix
 
-|       |   ground |   building |   signage |   bollard |   trash can |   barrier |   pedestrian |    car |   vegetation |
-|:-----------|---------:|-----------:|----------:|----------:|------------:|----------:|-------------:|-------:|-------------:|
-| ground     |   0.9735 |     0.001  |    0.0005 |    0.0001 |      0.0015 |    0.0008 |       0      | 0.0166 |       0.006  |
-| building   |   0.0037 |     0.846  |    0.0043 |    0      |      0.0049 |    0.0876 |       0.0001 | 0.0037 |       0.0497 |
-| signage    |   0.0002 |     0.2131 |    0.6973 |    0      |      0.0016 |    0.0233 |       0.0003 | 0.0008 |       0.0634 |
-| bollard    |   0.13   |     0.0051 |    0.7643 |    0.017  |      0.0251 |    0.0037 |       0      | 0.0075 |       0.0473 |
-| trash can  |   0.0715 |     0.0041 |    0.0469 |    0.0337 |      0.4388 |    0.1162 |       0.0188 | 0.0896 |       0.1805 |
-| barrier    |   0.0008 |     0.0202 |    0.0756 |    0      |      0.0061 |    0.4984 |       0.0002 | 0.0252 |       0.3734 |
-| pedestrian |   0.0005 |     0.002  |    0.0261 |    0      |      0.0125 |    0.0844 |       0.2188 | 0.2369 |       0.4189 |
-| car        |   0.0075 |     0.0002 |    0.0005 |    0      |      0.0021 |    0.0274 |       0.0004 | 0.9103 |       0.0517 |
-| vegetation |   0.0632 |     0.0045 |    0.018  |    0.0008 |      0.0282 |    0.0185 |       0.0002 | 0.0388 |       0.8277 |
-
-
+|            | ground | building | signage | bollard | trash can | barrier | pedestrian |    car | vegetation |
+|:-------|-------:|-------:|-------:|-------:|-------:|-------:|-------:|-------:|-------:|
+| ground     | 0.9735 |    0.001 |  0.0005 |  0.0001 |    0.0015 |  0.0008 |          0 | 0.0166 |      0.006 |
+| building   | 0.0037 |    0.846 |  0.0043 |       0 |    0.0049 |  0.0876 |     0.0001 | 0.0037 |     0.0497 |
+| signage    | 0.0002 |   0.2131 |  0.6973 |       0 |    0.0016 |  0.0233 |     0.0003 | 0.0008 |     0.0634 |
+| bollard    |   0.13 |   0.0051 |  0.7643 |   0.017 |    0.0251 |  0.0037 |          0 | 0.0075 |     0.0473 |
+| trash can  | 0.0715 |   0.0041 |  0.0469 |  0.0337 |    0.4388 |  0.1162 |     0.0188 | 0.0896 |     0.1805 |
+| barrier    | 0.0008 |   0.0202 |  0.0756 |       0 |    0.0061 |  0.4984 |     0.0002 | 0.0252 |     0.3734 |
+| pedestrian | 0.0005 |    0.002 |  0.0261 |       0 |    0.0125 |  0.0844 |     0.2188 | 0.2369 |     0.4189 |
+| car        | 0.0075 |   0.0002 |  0.0005 |       0 |    0.0021 |  0.0274 |     0.0004 | 0.9103 |     0.0517 |
+| vegetation | 0.0632 |   0.0045 |   0.018 |  0.0008 |    0.0282 |  0.0185 |     0.0002 | 0.0388 |     0.8277 |
 
 ## Cylindrical Neighborhood results {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
-
-![Point cloud image of Lille, France](predictedPoints_Cylinder.png){fig-alt="Cylindrical Results"}
-
-
-
-
+![Predicted Cylindrical Points](predictedPoints_Cylinder.png){fig-alt="Cylindrical Results"}
 
 ## Future Work {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
@@ -291,7 +290,7 @@ $$ - This allows us to define the cylinder in terms of the sphere.
 
 -   Neighborhoods and neighborhood definitions play an important role in modern deep learning networks
 
-    -   Modern convoluted neural networks such as KPConv use localized neighborhoods as part of the convolution operation [@noauthor_kpconv_nodate].
+    -   Modern convoluted neural networks such as KPConv use localized neighborhoods as part of the convolution operation [@thomas_kpconv_2019].
 
 ![Pointwise CNN](KPConv_kernel.png){fig-alt="KPConv"}
 
@@ -321,5 +320,3 @@ $$ - This allows us to define the cylinder in terms of the sphere.
 ## Questions? {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
 
 ## References {background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)"}
-
-
